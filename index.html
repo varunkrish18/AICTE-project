@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{var __t=localStorage.getItem("igcms_theme");if(__t)document.documentElement.setAttribute("data-theme",__t)}catch(e){}</script>
+<title>Institutional Governance &amp; Complaint Monitoring System — Demonstration</title>
+<style>
+/* ============ Design tokens ============ */
+:root{color-scheme:light;--navy:#172B4D;--navy2:#243B5A;--hd:#172B4D;--blue:#315B83;--lnk:#1F4E8C;--steel:#647C96;--bg:#F3F5F8;--card:#fff;--text:#16253B;--text2:#1F4E8C;--bd:#DCE3EB;--bd2:var(--bd2);--teal:#247C78;--amber:#C58A32;--red:#B74747;--green:#3C8061;--sw:250px;--hh:58px;
+--surf:var(--surf);--surf2:var(--surf2);--surf3:var(--surf3);--track:var(--track);--track2:var(--track2);--line2:var(--line2);--inpbd:var(--inpbd);--warnbg:var(--warnbg);--selbg:var(--selbg);--blkbg:var(--blkbg);--blkbd:var(--blkbd);--donebg:var(--donebg);--donebd:var(--donebd);
+--crit-bg:#F7E9E9;--crit-fg:#8F2F2F;--crit-bd:#E8C4C4;--warn-bg:#FBF2E1;--warn-fg:#8A5E15;--warn-bd:#EBD6AA;--ok-bg:#E6F1EB;--ok-fg:#2D6149;--ok-bd:var(--donebd);--info-bg:#E8EFF6;--info-fg:#27496B;--info-bd:#C5D6E6;--neu-bg:var(--track2);--neu-fg:#34465F;--neu-bd:var(--bd2);--teal-bg:#E3F1F0;--teal-fg:#1B5E5B;--teal-bd:#B9DAD7;
+--g-inst:#172B4D;--g-case:#EAF0F6;--g-dept:#E3F1F0;--g-cat:#FBF2E1;--g-off:#F0F2F5;--g-ev:#F7ECEC;--g-dept-bd:#9CC9C5;--g-cat-bd:#E2CB98;--g-ev-bd:#DDB8B8}
+:root[data-theme="dark"]{color-scheme:dark;--navy:#E8F0FA;--navy2:#0F1B30;--hd:#0A1322;--blue:#4A86C5;--lnk:#8EC3F5;--steel:#8FA9C6;--bg:#0D1624;--card:#152238;--text:#E6EEF8;--text2:#8EC3F5;--bd:#2A3C58;--bd2:#3A5070;--teal:#3FB5AE;--amber:#E0A84A;--red:#E26B6B;--green:#4FB583;
+--surf:#1A2A44;--surf2:#203452;--surf3:#182740;--track:#2A3D5A;--track2:#22324A;--line2:#22344F;--inpbd:#3A4F6E;--warnbg:#2F2814;--selbg:#1C3556;--blkbg:#3A1F24;--blkbd:#6B3238;--donebg:#16352A;--donebd:#2C6A50;
+--crit-bg:#3A1E22;--crit-fg:#FF9A9A;--crit-bd:#6B3238;--warn-bg:#3B2F16;--warn-fg:#F2C46D;--warn-bd:#6B5424;--ok-bg:#173A2C;--ok-fg:#7ED3A6;--ok-bd:#2C6A50;--info-bg:#1B3350;--info-fg:#9CCBF5;--info-bd:#2F5683;--neu-bg:#263449;--neu-fg:#C9D8EC;--neu-bd:#3A4E6B;--teal-bg:#14393A;--teal-fg:#6FD6CF;--teal-bd:#26615F;
+--g-inst:#3E78B2;--g-case:#22344F;--g-dept:#173F44;--g-cat:#4A3A1C;--g-off:#27354A;--g-ev:#4A2428;--g-dept-bd:#2E7C7C;--g-cat-bd:#8A6A2C;--g-ev-bd:#8A4A4A}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font:13.5px/1.45 "Segoe UI",Arial,sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden}
+h1,h2,h3,h4{margin:0;color:var(--navy);font-weight:600}
+a{color:var(--lnk)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #3B82C4;outline-offset:2px}
+.muted{color:var(--text2);font-weight:500}.small{font-size:12px}.xs{font-size:11px}.nowrap{white-space:nowrap}.right{text-align:right}
+/* ============ Header ============ */
+#hdr{position:fixed;top:0;left:0;right:0;height:var(--hh);background:var(--hd);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:40;border-bottom:1px solid #0F1F3A}
+.hl{display:flex;align-items:center;gap:12px;min-width:0}.hr{display:flex;align-items:center;gap:10px}
+#hdr h1{color:#fff;font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hdr .sub{font-size:11px;color:#CFE3F8}
+.demo-tag{font-size:10px;letter-spacing:.06em;border:1px solid #8FA6C0;color:#D6E0EC;padding:1px 6px;border-radius:3px;margin-left:8px;white-space:nowrap}
+.ibtn{background:transparent;border:1px solid transparent;color:#DCE6F1;border-radius:4px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.ibtn:hover{background:rgba(255,255,255,.1)}
+.ibtn svg{width:19px;height:19px}
+.cnt{position:absolute;top:2px;right:0;background:var(--red);color:#fff;font-size:10px;border-radius:9px;padding:0 5px;line-height:15px;min-width:16px;text-align:center}
+.hbtn{background:#fff;color:#172B4D;border:0;border-radius:4px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:12.5px}
+.hbtn:hover{background:#E6EDF5}
+#clk{font-size:12px;color:#C9D5E3;white-space:nowrap}
+.prof{display:flex;align-items:center;gap:8px;background:transparent;border:0;color:#fff;cursor:pointer;padding:4px 6px;border-radius:4px}
+.prof:hover{background:rgba(255,255,255,.1)}
+.av{width:30px;height:30px;border-radius:50%;background:#315B83;border:1px solid #8FA6C0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.prof .pt{text-align:left;line-height:1.15}.prof .pt b{font-size:12px;font-weight:600;display:block}.prof .pt span{font-size:10.5px;color:#B8C7D9}
+.menu{position:fixed;right:12px;top:calc(var(--hh) - 4px);background:var(--card);color:var(--text);border:1px solid var(--bd);border-radius:5px;box-shadow:0 6px 18px rgba(23,43,77,.18);min-width:220px;z-index:50;display:none;padding:4px 0}
+.menu.on{display:block}.menu button{display:block;width:100%;text-align:left;background:none;border:0;padding:8px 14px;cursor:pointer;font-size:13px}.menu button:hover{background:var(--surf2)}
+.menu hr{border:0;border-top:1px solid var(--bd);margin:4px 0}
+/* ============ Sidebar ============ */
+#side{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:var(--navy2);overflow-y:auto;z-index:30;padding:10px 0 20px;transition:width .15s}
+.nsec{font-size:10.5px;letter-spacing:.08em;color:#9CC8F2;padding:14px 18px 6px;font-weight:600}
+.nit{display:flex;align-items:center;gap:11px;width:100%;background:none;border:0;border-left:3px solid transparent;color:#E3EEFA;padding:8px 18px 8px 15px;cursor:pointer;text-align:left;font-size:13px}
+.nit:hover{background:rgba(255,255,255,.07);color:#fff}
+.nit.on{background:rgba(255,255,255,.12);border-left-color:#8FB3D9;color:#fff;font-weight:600}
+.nit svg{width:17px;height:17px;flex:none}
+.ico{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body.nav-collapsed #side{width:64px}
+body.nav-collapsed .nit span,body.nav-collapsed .nsec{display:none}
+body.nav-collapsed .nit{justify-content:center;padding:10px 0}
+body.nav-collapsed main{margin-left:64px}
+/* ============ Main ============ */
+main{margin-left:var(--sw);padding:calc(var(--hh) + 20px) 24px 40px;transition:margin .15s}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.ph h2{font-size:25px;line-height:1.2}.ph p{margin:4px 0 0;color:var(--text2);font-size:13px}
+.pa{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:5px;box-shadow:0 1px 2px rgba(23,43,77,.05);margin-bottom:18px;min-width:0}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.ch h3{font-size:15px}.cb{padding:14px 16px}
+.g2{display:grid;grid-template-columns:2fr 1fr;gap:18px}.g2e{display:grid;grid-template-columns:1fr 1fr;gap:18px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.g2>.card,.g2e>.card,.g3>.card{margin-bottom:0}.g2,.g2e,.g3{margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--bd);border-radius:5px;padding:12px 14px;box-shadow:0 1px 2px rgba(23,43,77,.05)}
+.kpi-l{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.kpi-v{font-size:28px;font-weight:600;color:var(--navy);line-height:1.15;margin:4px 0 2px}
+.kpi-d{font-size:11.5px;color:var(--text2)}.kpi svg{display:block;margin-top:6px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--steel)}
+.d-r{background:var(--red)}.d-a{background:var(--amber)}.d-g{background:var(--green)}.d-t{background:var(--teal)}.d-b{background:var(--blue)}
+.up-bad{color:var(--red)}.dn-good{color:var(--green)}
+.chbox{position:relative;height:250px;overflow:auto}
+/* ============ Tables ============ */
+.tw{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{background:var(--surf);color:var(--text2);text-transform:uppercase;font-size:10.5px;letter-spacing:.04em;text-align:left;padding:8px 10px;border-bottom:1px solid var(--bd);white-space:nowrap;font-weight:700}
+.tbl th.s{cursor:pointer}.tbl th.s:hover{color:var(--navy)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+.tbl tr:hover td{background:var(--surf)}
+body.compact .tbl td{padding:4px 10px}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;font-size:12px;color:var(--text2);flex-wrap:wrap;gap:8px}
+.empty{padding:26px;text-align:center;color:var(--text2)}
+/* ============ Controls ============ */
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--navy);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12.5px;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:var(--bd2)}.btn:disabled{opacity:.45;cursor:default}
+.btn-p{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-p:hover{background:#27496B;border-color:#27496B}
+.btn-d{color:var(--red);border-color:var(--blkbd)}.btn-sm{padding:3px 9px;font-size:12px}
+.lnk{background:none;border:0;padding:0;color:var(--lnk);cursor:pointer;font-weight:600;font-size:inherit;text-decoration:underline;text-decoration-color:var(--bd2);text-underline-offset:2px;text-align:left}
+.lnk:hover{color:var(--text);text-decoration-color:currentColor}
+input[type=text],input[type=search],input[type=date],select,textarea,input[type=file]{border:1px solid var(--inpbd);border-radius:4px;padding:6px 8px;background:var(--card);font-size:13px;min-width:0;max-width:100%}
+textarea{width:100%;min-height:70px;resize:vertical}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:12px 16px;border-bottom:1px solid var(--bd);background:var(--surf3)}
+.fld{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--text2)}.fld select,.fld input{min-width:140px}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.badge{display:inline-block;padding:1px 8px;border-radius:3px;font-size:11px;font-weight:600;border:1px solid;white-space:nowrap}
+
+
+
+.b-crit{background:var(--crit-bg);color:var(--crit-fg);border-color:var(--crit-bd)}.b-warn{background:var(--warn-bg);color:var(--warn-fg);border-color:var(--warn-bd)}.b-ok{background:var(--ok-bg);color:var(--ok-fg);border-color:var(--ok-bd)}.b-info{background:var(--info-bg);color:var(--info-fg);border-color:var(--info-bd)}.b-neutral{background:var(--neu-bg);color:var(--neu-fg);border-color:var(--neu-bd)}.b-teal{background:var(--teal-bg);color:var(--teal-fg);border-color:var(--teal-bd)}
+.note{border:1px solid var(--bd2);background:var(--surf);border-left:3px solid var(--steel);padding:9px 12px;font-size:12px;color:var(--text);border-radius:3px;margin-bottom:16px}
+.note.warn{border-left-color:var(--amber);background:var(--warnbg)}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:5px;padding:10px 12px;cursor:pointer;text-align:left}
+.tile:hover{border-color:var(--steel)}.tile.on{border-color:var(--blue);background:var(--selbg)}
+.tile b{display:block;font-size:22px;color:var(--navy)}.tile span{font-size:12px;color:var(--text2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+dl.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;margin:0;font-size:13px}dl.kv dt{color:var(--text2);font-weight:600}dl.kv dd{margin:0}
+.bar{height:8px;background:var(--track);border-radius:4px;overflow:hidden;min-width:70px}.bar i{display:block;height:100%;background:var(--blue)}
+.stack{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--track);min-width:120px}.stack i{display:block;height:100%}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--bd);margin-bottom:16px;flex-wrap:wrap}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;cursor:pointer;color:var(--text2);font-size:13px}
+.tab:hover{color:var(--navy)}.tab.on{color:var(--navy);border-bottom-color:var(--blue);font-weight:600}
+ul.tl{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--bd)}
+ul.tl li{position:relative;padding:0 0 14px 14px}ul.tl li:before{content:"";position:absolute;left:-21px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--card);border:2px solid var(--steel)}
+ul.tl li.sim:before{border-color:var(--bd2)}
+.flow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fn{border:1px solid var(--bd);border-radius:4px;padding:8px 12px;background:var(--card);font-weight:600;font-size:12.5px;min-width:130px}
+.fn small{display:block;font-weight:400;color:var(--text2);font-size:11px;margin-top:2px;max-width:200px}
+.fn.blocked{border-color:var(--blkbd);background:var(--blkbg)}.fn.done{border-color:var(--donebd);background:var(--donebg)}.fa{color:var(--steel);font-size:18px}
+.steps{display:flex;gap:0;flex-wrap:wrap;margin:8px 0}
+.stp{flex:1;min-width:90px;text-align:center;font-size:10.5px;padding:5px 3px;background:var(--track2);color:var(--text2);border-right:2px solid #fff}
+.stp.on{background:var(--blue);color:#fff}.stp.cur{background:var(--hd);color:#fff;font-weight:600}
+.sig{border:1px solid var(--bd);border-radius:5px;padding:12px 14px;margin-bottom:12px;background:var(--card)}
+.alert{border:1px solid var(--bd);border-left:4px solid var(--steel);border-radius:4px;padding:10px 14px;margin-bottom:10px;background:var(--card)}
+.alert.crit{border-left-color:var(--red)}.alert.high{border-left-color:var(--amber)}.alert.med{border-left-color:var(--teal)}.alert.low{border-left-color:#9AA6B4}
+.alert.read{opacity:.62}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text2)}
+.live i{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}.live.paused i{background:#9AA6B4}
+.fallback{padding:8px}
+.fallback .tbl{font-size:12px}
+/* ============ Overlays ============ */
+.ov{position:fixed;inset:0;background:rgba(23,43,77,.38);z-index:60;display:none}.ov.on{display:block}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(580px,100%);background:var(--card);z-index:61;box-shadow:-6px 0 22px rgba(23,43,77,.2);display:none;flex-direction:column}
+#drawer.on{display:flex}
+.dh{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.db{padding:16px 18px;overflow-y:auto;flex:1}.db h4{font-size:14px;margin:18px 0 8px}.db h4:first-child{margin-top:0}
+#modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,94vw);max-height:88vh;overflow:auto;background:var(--card);border-radius:5px;z-index:62;display:none;box-shadow:0 12px 40px rgba(23,43,77,.3)}
+#modal.on{display:block}
+.mh{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}.mb{padding:16px 18px}.mf{padding:12px 18px;border-top:1px solid var(--bd);display:flex;gap:8px;justify-content:flex-end;background:var(--surf3)}
+#toast{position:fixed;top:calc(var(--hh) + 12px);right:20px;z-index:90;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--hd);color:#fff;border-left:4px solid var(--teal);padding:9px 14px;border-radius:3px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.2);max-width:340px}
+.toast.warn{border-left-color:var(--amber)}
+#demo{position:fixed;right:20px;bottom:20px;width:370px;max-width:calc(100vw - 24px);background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--teal);border-radius:5px;box-shadow:0 8px 28px rgba(23,43,77,.28);z-index:70;display:none;padding:14px 16px}
+#demo.on{display:block}#demo h4{font-size:15px;margin:4px 0 6px}#demo p{margin:0 0 12px;font-size:12.5px;color:var(--text)}
+.demo-hl{outline:2px solid var(--amber)!important;outline-offset:2px;background:rgba(197,138,50,.09)!important;scroll-margin:120px}
+body.demo-on main{padding-bottom:230px}
+/* ============ Graph ============ */
+.gwrap{overflow:auto;border:1px solid var(--bd);border-radius:4px;background:var(--card)}
+.node{cursor:pointer}.node rect{fill:var(--card);stroke:var(--bd2);stroke-width:1}.node text{font-size:11px;fill:var(--text);pointer-events:none}
+.node.sel rect{stroke:var(--navy);stroke-width:2}.node.dim{opacity:.25}
+.t-inst rect{fill:var(--g-inst);stroke:var(--g-inst)}.t-inst text{fill:#fff}.t-case rect{fill:var(--g-case)}.t-dept rect{fill:var(--g-dept);stroke:var(--g-dept-bd)}.t-cat rect{fill:var(--g-cat);stroke:var(--g-cat-bd)}.t-off rect{fill:var(--g-off)}.t-ev rect{fill:var(--g-ev);stroke:var(--g-ev-bd)}
+.edge{fill:none;stroke:var(--bd2);stroke-width:1}.edge.hi{stroke:var(--steel);stroke-width:1.6}.edge.dim{opacity:.15}
+.lg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--text2)}.lg i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:-2px;border:1px solid #B9C6D4}
+.print-only{display:none}
+/* ============ Responsive ============ */
+@media(max-width:1000px){.g2,.g2e,.g3{grid-template-columns:1fr}.hide-m{display:none!important}}
+@media(max-width:760px){
+ main,body.nav-collapsed main{margin-left:0;padding:calc(var(--hh) + 14px) 12px 30px}
+ #side,body.nav-collapsed #side{transform:translateX(-100%);width:var(--sw);transition:transform .18s}
+ body.nav-collapsed .nit span,body.nav-collapsed .nsec{display:inline}body.nav-collapsed .nsec{display:block}
+ body.nav-collapsed .nit{justify-content:flex-start;padding:8px 18px 8px 15px}
+ body.nav-open #side{transform:none}
+ #hdr h1{font-size:13px}.ph h2{font-size:21px}.prof .pt,#clk,.sub,.demo-tag{display:none}
+ dl.kv{grid-template-columns:110px 1fr}
+ #demo{left:12px;right:12px;width:auto}
+}
+/* ============ Print ============ */
+@media print{
+ #hdr,#side,#drawer,#modal,.ov,#demo,#toast,.noprint,.pager{display:none!important}
+ main{margin:0!important;padding:0!important}
+ body{background:var(--card)}.card{box-shadow:none;break-inside:avoid}
+ .print-only{display:block;border-bottom:2px solid var(--navy);margin-bottom:14px;padding-bottom:8px}
+ .g2,.g2e,.g3{grid-template-columns:1fr 1fr}
+}
+
+:root[data-theme="dark"] .stp.cur{box-shadow:inset 0 0 0 1px var(--lnk)}
+.selbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.selbar .btn-sm{font-weight:600}
+</style>
+</head>
+<body>
+<header id="hdr">
+ <div class="hl">
+  <button class="ibtn" id="burger" aria-label="Toggle navigation" title="Toggle navigation"><svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true" style="flex:none"><circle cx="18" cy="18" r="16.5" fill="none" stroke="#8FA6C0" stroke-width="1.5"/><circle cx="18" cy="18" r="12" fill="none" stroke="#8FA6C0" stroke-width="1"/><path d="M11 24h14M12 24v-8m4 8v-8m4 8v-8m4 8v-8M10 16l8-5 8 5z" fill="none" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  <div style="min-width:0"><h1>Institutional Governance &amp; Complaint Monitoring System<span class="demo-tag">DEMO ENVIRONMENT</span></h1><div class="sub">AICTE-Aligned Institutional Oversight</div></div>
+ </div>
+ <div class="hr">
+  <span id="clk"></span>
+  <button class="hbtn" id="demoBtn" title="Open the guided Assist walkthrough">Assist</button>
+  <button class="ibtn" id="themeBtn" aria-label="Switch between light and dark mode" title="Switch to dark mode"><svg class="ico" viewBox="0 0 24 24" id="themeIco"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+  <button class="ibtn" id="bellBtn" aria-label="Notifications" title="Alerts &amp; Notifications"><svg class="ico" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><span class="cnt" id="bellCnt">0</span></button>
+  <button class="ibtn" id="setBtn" aria-label="Settings" title="Settings"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg></button>
+  <button class="prof" id="profBtn" aria-haspopup="true"><span class="av">AD</span><span class="pt"><b>Administrator</b><span>Oversight Cell (demo)</span></span><span style="font-size:10px">▾</span></button>
+ </div>
+</header>
+<div class="menu" id="profMenu" role="menu">
+ <button data-m="csv">Export all complaint records (CSV)</button>
+</div>
+<aside id="side" aria-label="Primary navigation"><nav id="nav"></nav></aside>
+<main id="main"><div id="content"></div>
+ <p class="muted xs noprint" style="margin-top:28px;border-top:1px solid var(--bd);padding-top:10px">Demonstration environment. All institutions, people, cases and figures are fictional. Not connected to AICTE or any government system; not an official record. Analytics are evaluated against the demonstration reference date 23 Oct 2026.</p>
+</main>
+<div class="ov" id="ov"></div>
+<div id="drawer" role="dialog" aria-modal="true" aria-label="Case detail"></div>
+<div id="modal" role="dialog" aria-modal="true"></div>
+<div id="toast" aria-live="polite"></div>
+<div id="demo" role="dialog" aria-label="Assist"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onerror="void 0"></script>
+<script>
+'use strict';
+(function(){
+/* =====================================================================
+   1. UTILITIES
+   ===================================================================== */
+const TODAY='2026-10-23';                       // fixed demonstration reference date
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const $=(s,r)=>(r||document).querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pd=s=>{const a=s.slice(0,10).split('-').map(Number);return new Date(a[0],a[1]-1,a[2]);};
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addD=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d);};
+const diff=(a,b)=>Math.round((pd(a)-pd(b))/86400000);
+const ago=n=>addD(TODAY,-n);
+const fmt=s=>{if(!s)return '—';const d=pd(s);return d.getDate()+' '+MON[d.getMonth()]+' '+d.getFullYear();};
+const fmtT=ts=>fmt(ts)+(ts.length>10?' '+ts.slice(11,16):'');
+const trunc=(s,n)=>s.length>n?s.slice(0,n-1)+'…':s;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const avg=a=>a.length?sum(a)/a.length:null;
+const pct=(n,d)=>d?Math.round(100*n/d):0;
+const hash=s=>{let h=7;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const nowTs=()=>{const d=new Date();return TODAY+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+
+/* =====================================================================
+   2. REFERENCE DATA (fictional)
+   ===================================================================== */
+const INST=[
+ {id:'INST-TN-001',name:'Coastal Institute of Technology',short:'Coastal IT',state:'Tamil Nadu',district:'Chennai',type:'Autonomous Engineering Institute',officer:'Dr. R. Venkatesan (Registrar)',depts:9,officers:['Kavitha Raman','Suresh Babu']},
+ {id:'INST-TS-002',name:'Deccan College of Engineering',short:'Deccan CE',state:'Telangana',district:'Hyderabad',type:'Affiliated Engineering College',officer:'Dr. M. Srinivas (Principal)',depts:8,officers:['Arjun Mehta','Fatima Sheikh']},
+ {id:'INST-MP-003',name:'Vindhya Institute of Management',short:'Vindhya IM',state:'Madhya Pradesh',district:'Bhopal',type:'Management Institute (PGDM)',officer:'Prof. A. Chaturvedi (Director)',depts:7,officers:['Priya Nambiar','Manoj Tiwari']},
+ {id:'INST-MH-004',name:'Sahyadri Polytechnic',short:'Sahyadri Poly',state:'Maharashtra',district:'Pune',type:'Diploma-level Technical Institution',officer:'Mr. S. Kulkarni (Principal)',depts:8,officers:['Rohit Deshpande','Anita Kulkarni']},
+ {id:'INST-BR-005',name:'Gangetic Institute of Technology',short:'Gangetic IT',state:'Bihar',district:'Patna',type:'State Technical University Campus',officer:'Dr. P. Sinha (Dean, Administration)',depts:10,officers:['Imran Qureshi','Deepak Sinha']},
+ {id:'INST-KL-006',name:'Malabar College of Engineering',short:'Malabar CE',state:'Kerala',district:'Kozhikode',type:'Private Engineering College',officer:'Dr. T. Menon (Principal)',depts:8,officers:['Sneha Joseph','Vinod Pillai']}
+];
+const DEPTS=['Accounts','Student Affairs','Examination Cell','Academic Administration','Facilities','Procurement','Hostel Administration','Admissions','Library','Training & Placement'];
+const CATS=['Scholarship Delay','Infrastructure','Examination','Student Services','Fee Refund','Faculty Vacancy','Hostel','Admissions'];
+const STATUSES=['New','Under Review','Awaiting Department Response','In Progress','Escalated','Resolved','Closed'];
+const ACTIONS=['Status update','Follow-up recorded','Department assigned','Officer assigned','Administrative note','Escalation','Response received'];
+const CD={'Scholarship Delay':['Accounts','Student Affairs'],'Infrastructure':['Facilities','Procurement'],'Examination':['Examination Cell','Academic Administration'],'Student Services':['Student Affairs','Library'],'Fee Refund':['Accounts'],'Faculty Vacancy':['Academic Administration'],'Hostel':['Hostel Administration','Facilities'],'Admissions':['Admissions']};
+const TPL={'Scholarship Delay':['Scholarship amount not credited for current semester','Pending verification of scholarship application','Delay in disbursement of merit scholarship'],
+ 'Infrastructure':['Classroom ceiling damage reported','Network outage in computer laboratory','Drinking-water purifier non-functional'],
+ 'Examination':['Delay in publication of semester results','Marks discrepancy in internal assessment','Re-evaluation request not acknowledged'],
+ 'Student Services':['Bonafide certificate not issued within norm','Grievance cell does not acknowledge requests','Bus pass renewal pending'],
+ 'Fee Refund':['Refund not processed after course withdrawal','Excess fee collected during admission'],
+ 'Faculty Vacancy':['Vacant faculty position affecting laboratory sessions','Visiting faculty not appointed for elective'],
+ 'Hostel':['Mess hygiene concerns raised by residents','Room allotment dispute for senior students','Hostel electrical wiring unsafe'],
+ 'Admissions':['Delay in issuing admission confirmation letter','Document verification pending after counselling']};
+const isOpen=c=>c.status!=='Resolved'&&c.status!=='Closed';
+
+/* =====================================================================
+   3. SEED DATA GENERATION (deterministic) AND STATE
+   ===================================================================== */
+const KEY='igcms_demo_state_v1';
+function seed(){
+ const cases=[];
+ // K(number,title,inst,dept,category,receivedDaysAgo,status,officer,lastActionDaysAgo,nextDueInDays,slaInDays,severity,affected,returned,followUp)
+ const K=(n,title,inst,dept,cat,recv,status,off,last,next,sla,sev,aff,ret,fu)=>cases.push({id:'CASE-2026-'+n,title,inst,dept,cat,recv:ago(recv),status,officer:off,last:ago(last),next:next==null?null:addD(TODAY,next),sla:addD(TODAY,sla),sev,aff,ret,fu,notes:[]});
+ K('0142','Post-matric scholarship disbursement pending for 2025-26 batch',0,'Accounts','Scholarship Delay',41,'Awaiting Department Response','Kavitha Raman',12,-5,-6,3,148,1,true);
+ K('0138','Scholarship credit not received by SC/ST category students',0,'Student Affairs','Scholarship Delay',47,'In Progress','Kavitha Raman',9,-2,-9,3,62,2,true);
+ K('0151','Hostel Block B water supply interruption',1,'Facilities','Infrastructure',28,'Escalated','Arjun Mehta',6,2,3,2,210,0,true);
+ K('0127','Recurring water shortage in boys hostel',1,'Hostel Administration','Infrastructure',52,'Under Review','Arjun Mehta',15,-8,-14,2,180,2,false);
+ K('0160','Semester result revaluation outcome not published',2,'Examination Cell','Examination',19,'Awaiting Department Response','Priya Nambiar',8,-1,2,2,34,0,true);
+ K('0119','Laboratory equipment unusable in ECE laboratory',3,'Procurement','Infrastructure',66,'In Progress','Rohit Deshpande',20,-10,-22,2,96,1,true);
+ K('0133','Fee refund pending after admission withdrawal',4,'Accounts','Fee Refund',35,'New','','35'*1,-20,-4,1,1,0,false);
+ K('0155','Hall ticket errors for final-year examination',2,'Examination Cell','Examination',14,'Under Review','Priya Nambiar',3,4,7,2,58,0,true);
+ K('0147','Library access denied to postgraduate students',5,'Library','Student Services',24,'In Progress','Sneha Joseph',5,3,10,1,40,0,true);
+ K('0162','Faculty vacancies in CSE affecting syllabus coverage',4,'Academic Administration','Faculty Vacancy',30,'Awaiting Department Response','Imran Qureshi',11,-3,5,3,240,1,true);
+ K('0125','Transcript issuance delayed beyond 30 days',5,'Examination Cell','Examination',58,'Escalated','Sneha Joseph',10,-4,-10,1,12,3,true);
+ K('0171','Fire-safety certificate for laboratory block expired',3,'Facilities','Infrastructure',10,'New','Rohit Deshpande',8,1,12,3,400,0,true);
+ K('0109','Placement cell charges undisclosed fees',1,'Training & Placement','Student Services',90,'Resolved','Arjun Mehta',40,null,-60,1,25,0,true);
+ K('0166','Scholarship portal rejects valid supporting documents',5,'Student Affairs','Scholarship Delay',22,'In Progress','Sneha Joseph',4,5,6,2,77,0,true);
+ K('0149','Hall ticket and enrolment data mismatch (earlier cycle)',2,'Examination Cell','Examination',33,'Closed','Priya Nambiar',16,null,-3,2,45,0,true);
+ K('0158','Mess food quality complaints from hostel residents',3,'Hostel Administration','Hostel',17,'Under Review','Rohit Deshpande',2,6,11,1,120,0,true);
+ cases.forEach(c=>{if(c.id==='CASE-2026-0133')c.last=ago(35);});
+ // Generated sample records (seeded PRNG, so reproducible)
+ const R=rng(2026),pick=a=>a[Math.floor(R()*a.length)];
+ for(let i=0;i<100;i++){
+  const cat=pick(CATS),inst=Math.floor(R()*6),age=Math.floor(110*Math.pow(R(),1.35));
+  const pRes=age<10?.05:age<30?.3:age<60?.65:.9,res=R()<pRes,slaLen=R()<.6?21:30;
+  const rv=R(),sev=rv<.2?3:rv<.6?2:1,aff=Math.max(1,Math.round(Math.pow(10,R()*2.6))),rr=R(),ret=rr<.04?2:rr<.14?1:0;
+  let status,lastAgo,next=null,off=pick(INST[inst].officers),fu=true;
+  if(res){status=R()<.5?'Resolved':'Closed';lastAgo=Math.max(0,age-(3+Math.floor(R()*27)));}
+  else{lastAgo=Math.floor(R()*(Math.min(age,16)+1));
+   status=lastAgo===age?'New':pick(['Under Review','Under Review','Awaiting Department Response','Awaiting Department Response','In Progress','In Progress','In Progress','Escalated']);
+   if(status==='New'&&R()<.35){off='';}
+   if(status==='New'&&lastAgo===age)fu=false;
+   next=(5+Math.floor(R()*8))-lastAgo;}
+  K('0'+(200+i),pick(TPL[cat]),inst,pick(CD[cat]),cat,age,status,off,lastAgo,next,slaLen-age,sev,aff,ret,fu);
+ }
+ // Action history (sample records)
+ const hist=[];
+ const H=(ts,c,prev,next,action,off,dept,note)=>hist.push({ts,caseId:c.id,prev,next,action,officer:off,dept,note,sim:true});
+ cases.forEach(c=>{
+  const hv=hash(c.id),m=(x)=>String(x%50+10).padStart(2,'0'),off=c.officer||'Unassigned';
+  H(c.recv+'T09:'+m(hv),c,'—','New','Complaint registered','Registry Desk','Central Registry','Complaint logged in the case register (sample record).');
+  if(c.status==='New')return;
+  let d1=addD(c.recv,1+hv%3);if(d1>c.last)d1=c.last;
+  H(d1+'T11:'+m(hv>>3),c,'New','Under Review','Acknowledged; assigned for review',off,c.dept,'Case acknowledged and routed to '+c.dept+'.');
+  let cur='Under Review';
+  if(c.status==='Closed'||c.status==='Resolved'){
+   const mid=addD(c.recv,Math.max(1,Math.floor(diff(c.last,c.recv)/2)));
+   if(mid>d1&&mid<c.last){H(mid+'T15:'+m(hv>>5),c,'Under Review','In Progress','Status updated',off,c.dept,'Corrective action initiated.');cur='In Progress';}
+   H(c.last+'T16:'+m(hv>>7),c,cur,c.status,'Status updated',off,c.dept,c.status==='Resolved'?'Resolution recorded and communicated.':'Case closed after verification of resolution.');
+  }else if(c.status!=='Under Review'){
+   const notes={'Awaiting Department Response':'Information requested from the department.','In Progress':'Corrective action in progress.','Escalated':'Escalated to institution head.'};
+   H(c.last+'T16:'+m(hv>>7),c,'Under Review',c.status,'Status updated',off,c.dept,notes[c.status]);
+  }
+  for(let k=0;k<c.ret;k++){const rd=addD(d1,2+k*3);if(rd<=c.last)H(rd+'T12:'+m(hv>>(2+k)),c,'Under Review','Under Review','Returned without resolution',off,c.dept,'Returned by department; response judged incomplete.');}
+ });
+ const mkE=(id,caseId,type,d,by,src,status,hs)=>({id,caseId,type,date:ago(d),by,src,status,action:'',hist:hs.map(h=>({d:ago(h[0]),t:h[1]}))});
+ const evidence=[
+  mkE('E-0101','CASE-2026-0142','Administrative letter',38,'Student representative','Fund release request letter addressed to the Accounts section','Under Verification',[[38,'Reference registered'],[30,'Sent for review to Accounts section']]),
+  mkE('E-0102','CASE-2026-0138','Document',44,'Complainant','List of 62 students reported to have pending scholarship credit','Awaiting Review',[[44,'Reference registered']]),
+  mkE('E-0103','CASE-2026-0151','Photograph',25,'Hostel warden','Photographs of dry water tanks, Block B (reference only)','Reviewed – Consistent',[[25,'Reference registered'],[20,'Reviewed against maintenance log']]),
+  mkE('E-0104','CASE-2026-0127','Correspondence reference',50,'Student council','Email thread with Hostel Administration reporting water shortage','Awaiting Review',[[50,'Reference registered']]),
+  mkE('E-0105','CASE-2026-0160','Document',17,'Complainant','Copy of re-evaluation fee receipt','Under Verification',[[17,'Reference registered'],[10,'Requested confirmation from Examination Cell']]),
+  mkE('E-0106','CASE-2026-0119','Administrative letter',60,'Head of Department (ECE)','Letter to Procurement requesting replacement of oscilloscopes','Reviewed – Consistent',[[60,'Reference registered'],[55,'Reviewed against department records']]),
+  mkE('E-0107','CASE-2026-0155','Photograph',12,'Complainant','Photographs of hall tickets showing incorrect enrolment numbers','Awaiting Review',[[12,'Reference registered']]),
+  mkE('E-0108','CASE-2026-0149','Document',30,'Examination Cell','Corrected enrolment data sheet (closure reference)','Reviewed – Consistent',[[30,'Reference registered'],[17,'Reviewed at closure']]),
+  mkE('E-0109','CASE-2026-0171','Document',9,'Safety committee','Copy of fire-safety certificate showing expiry date','Under Verification',[[9,'Reference registered']]),
+  mkE('E-0110','CASE-2026-0125','Correspondence reference',55,'Complainant','Four email references requesting transcript issuance','Could Not Be Verified',[[55,'Reference registered'],[40,'Mail records could not be located by the department']]),
+  mkE('E-0111','CASE-2026-0147','Correspondence reference',22,'PG student association','Representation submitted to the Librarian','Awaiting Review',[[22,'Reference registered']]),
+  mkE('E-0112','CASE-2026-0162','Administrative letter',28,'Student representative','Petition by CSE students (signatory count as claimed by submitter)','Awaiting Review',[[28,'Reference registered']]),
+  mkE('E-0113','CASE-2026-0166','Photograph',20,'Complainant','Screenshots of portal rejection messages','Under Verification',[[20,'Reference registered'],[14,'Portal logs requested from IT section']])
+ ];
+ const O=(id,a,b,sim,ev,why,review,note)=>({id,a:'CASE-2026-'+a,b:'CASE-2026-'+b,sim,ev,why,review,note:note||''});
+ const overlaps=[
+  O('OV-01','0142','0138',86,'E-0101 and E-0102 both refer to the same beneficiary list','Both complaints concern delayed 2025-26 scholarship credit at the same institution and involve Accounts and Student Affairs.','Potential Match'),
+  O('OV-02','0151','0127',78,'E-0103 and E-0104 refer to the same water-supply fault log','Both describe interrupted water supply in the boys hostel; the earlier case is returned twice with no documented follow-up.','Under Review'),
+  O('OV-03','0155','0149',64,'E-0107 and E-0108 both concern enrolment numbers on hall tickets','The closed case describes the same enrolment-data mismatch; the new case suggests the earlier fix may not have held.','Potential Match'),
+  O('OV-04','0119','0171',41,'No shared evidence','Same institution and category (Infrastructure), but one concerns laboratory equipment and the other a safety certificate.','Distinct Issues','Reviewed in demonstration data: different facilities and departments; keep separate.'),
+  O('OV-05','0160','0155',55,'Same department, different documents','Both involve the Examination Cell at the same institution during the same examination cycle; root cause may be shared.','Under Review')
+ ];
+ const D=(id,c,primary,support,pending,since,blocking,next)=>({id,caseId:'CASE-2026-'+c,primary,support,pending,since:ago(since),blocking,next,status:'Pending',resolvedOn:'',updates:[]});
+ const deps=[
+  D('DEP-01','0142','Accounts',['Student Affairs'],'Verified beneficiary list from Student Affairs',14,'Disbursement authorisation','Escalate to the Dean (Student Affairs) for the list within 48 hours.'),
+  D('DEP-02','0138','Student Affairs',['Accounts'],'Fund release confirmation from Accounts',11,'Credit of scholarship amount','Request written fund-release date from the Accounts officer.'),
+  D('DEP-03','0119','Procurement',['Facilities','Accounts'],'Purchase order approval',24,'Replacement of equipment','Obtain approval status from Accounts and set a decision date.'),
+  D('DEP-04','0151','Facilities',['Procurement'],'Vendor quotation for pump replacement',9,'Restoration of water supply','Seek interim tanker supply while quotation is finalised.'),
+  D('DEP-05','0160','Examination Cell',['Academic Administration'],'Ratification by revaluation board',8,'Publication of revised results','Ask Academic Administration to schedule the board meeting.'),
+  D('DEP-06','0162','Academic Administration',['Accounts'],'Recruitment sanction from the finance section',17,'Appointment of faculty','Escalate sanction request to the Principal.'),
+  D('DEP-07','0127','Hostel Administration',['Facilities'],'Plumbing audit report',13,'Permanent repair plan','Request audit report and fix a completion date.')
+ ];
+ return {v:1,cases,hist,evidence,overlaps,deps,read:{},weights:{sla:25,overdue:20,severity:20,affected:10,repeat:10,missing:10,evidence:5},nextCase:1,settings:{compact:false}};
+}
+function loadState(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.v===1)return o;}}catch(e){}return seed();}
+let S=loadState();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* =====================================================================
+   4. DERIVED LOGIC — all computed from dates and records
+   ===================================================================== */
+const caseById=id=>S.cases.find(c=>c.id===id);
+const slaDays=c=>diff(c.sla,TODAY);
+const sinceAction=c=>diff(TODAY,c.last);
+const overdueNext=c=>isOpen(c)&&!!c.next&&diff(TODAY,c.next)>0;
+const caseEvidence=c=>S.evidence.filter(e=>e.caseId===c.id);
+const caseOverlaps=c=>S.overlaps.filter(o=>o.a===c.id||o.b===c.id);
+const caseHist=c=>S.hist.filter(h=>h.caseId===c.id).sort((a,b)=>a.ts<b.ts?-1:1);
+const caseDep=c=>S.deps.filter(d=>d.caseId===c.id);
+function slaState(c){if(!isOpen(c))return 'Completed';const d=slaDays(c);return d<0?'Breached':d<=7?'Due ≤ 7 days':'Within SLA';}
+const GAPL={missed:'Action overdue',sla:'SLA breached',near:'Deadline near',unassigned:'Unassigned',nofu:'No follow-up',await:'Awaiting response',returned:'Returned',stale:'Stale'};
+function gaps(c){
+ const g=[];if(!isOpen(c))return g;
+ const since=sinceAction(c),sd=slaDays(c);
+ if(!c.officer)g.push({k:'unassigned',t:'No officer is assigned; the case has had no owner for '+diff(TODAY,c.recv)+' days.'});
+ if(overdueNext(c))g.push({k:'missed',t:'The next action was due on '+fmt(c.next)+' ('+diff(TODAY,c.next)+' days ago) and has not been recorded.'});
+ if(sd<0)g.push({k:'sla',t:'The SLA deadline passed on '+fmt(c.sla)+' ('+(-sd)+' days overdue).'});
+ else if(sd<=3)g.push({k:'near',t:'The SLA deadline falls in '+sd+' day(s), on '+fmt(c.sla)+'.'});
+ if(!c.fu)g.push({k:'nofu',t:'No documented follow-up exists since the complaint was registered.'});
+ if(c.status==='Awaiting Department Response'&&since>=5)g.push({k:'await',t:'A response from '+c.dept+' has been awaited for '+since+' days.'});
+ if(c.ret>=2)g.push({k:'returned',t:'The case has been returned '+c.ret+' times without resolution.'});
+ if(since>=10)g.push({k:'stale',t:'No action has been recorded for '+since+' days.'});
+ return g;
+}
+function gapSummary(c){
+ const g=gaps(c);if(!g.length)return 'No action gap detected from the recorded dates.';
+ const order=['stale','missed','sla','await','unassigned','nofu','returned','near'];
+ g.sort((a,b)=>order.indexOf(a.k)-order.indexOf(b.k));
+ return c.id+' — '+g.slice(0,3).map(x=>x.t).join(' ')+' Administrative review is recommended.';
+}
+function recAction(c){
+ if(!isOpen(c))return 'No action required.';
+ const k=gaps(c).map(x=>x.k);
+ if(k.includes('unassigned'))return 'Assign a responsible officer and acknowledge the complainant.';
+ if(k.includes('await')&&k.includes('sla'))return 'Escalate to the head of '+c.dept+' and request a written update within 48 hours.';
+ if(k.includes('returned'))return 'Convene a review meeting to resolve the cause of repeated returns.';
+ if(k.includes('missed'))return 'Record the pending action or reset the due date with a written justification.';
+ if(k.includes('nofu'))return 'Document a follow-up with the responsible department.';
+ if(k.includes('near'))return 'Confirm the completion plan before the SLA deadline.';
+ if(k.includes('await'))return 'Send a reminder to '+c.dept+' for the pending response.';
+ return 'Continue monitoring; no immediate intervention required.';
+}
+/* Explainable priority: deterministic weighted rules (illustrative) */
+const FL={sla:'Time to SLA deadline',overdue:'Days overdue',severity:'Complaint severity',affected:'Affected parties',repeat:'Repeated / related issues',missing:'Missing departmental response',evidence:'Evidence completeness gap'};
+function pScore(c){
+ const w=S.weights,sd=slaDays(c),ev=caseEvidence(c);
+ const f={
+  sla:sd<=0?1:sd<=3?.8:sd<=7?.5:sd<=14?.25:0,
+  overdue:Math.min(1,Math.max(0,-sd)/14),
+  severity:c.sev/3,
+  affected:Math.min(1,Math.log10((c.aff||0)+1)/2.5),
+  repeat:Math.min(1,(c.ret+caseOverlaps(c).filter(o=>o.review!=='Distinct Issues').length)/3),
+  missing:c.status==='Awaiting Department Response'?Math.min(1,sinceAction(c)/14):(c.fu?0:.5),
+  evidence:ev.length?1-ev.filter(e=>e.status==='Reviewed – Consistent').length/ev.length:1
+ };
+ const tw=sum(Object.values(w))||1,contrib={};let score=0;
+ Object.keys(f).forEach(k=>{contrib[k]=w[k]*f[k]/tw*100;score+=contrib[k];});
+ return {score:Math.round(score),f,contrib};
+}
+function priority(c){if(!isOpen(c))return '—';const s=pScore(c).score;return s>=66?'Critical':s>=45?'High':s>=28?'Medium':'Low';}
+function pExplain(c){
+ if(!isOpen(c))return 'Case is closed; priority is not assessed.';
+ const p=pScore(c),f=p.f,sd=slaDays(c),r=[];
+ if(f.overdue>0)r.push('the SLA deadline passed '+(-sd)+' days ago');else if(sd<=7)r.push('the SLA deadline is '+sd+' day(s) away');
+ if(f.missing>=.4)r.push(c.status==='Awaiting Department Response'?'no departmental update has been recorded for '+sinceAction(c)+' days':'no follow-up is documented');
+ if(f.repeat>=.3)r.push('related or repeated complaints remain unresolved');
+ if(f.severity>=.66)r.push('the complaint is classed as high severity');
+ if(f.affected>=.7)r.push('about '+c.aff+' people are affected');
+ if(f.evidence>=.99)r.push('no reviewed evidence is on record');
+ if(!r.length)return 'Reason: no single factor exceeds its alert threshold.';
+ return 'Reason: '+(r.length>1?r.slice(0,-1).join(', ')+' and '+r[r.length-1]:r[0])+'.';
+}
+function compliance(cs){return cs.length?pct(cs.filter(c=>isOpen(c)?c.sla>=TODAY:c.last<=c.sla).length,cs.length):0;}
+function avgResolution(cs){const a=cs.filter(c=>!isOpen(c)).map(c=>diff(c.last,c.recv));return a.length?Math.round(avg(a)):null;}
+function avgResponse(cs){const a=[];cs.forEach(c=>{const h=caseHist(c).find(x=>x.action==='Acknowledged; assigned for review');if(h)a.push(diff(h.ts,c.recv));});return a.length?avg(a):null;}
+function overdueAt(c,dt){return c.recv<=dt&&c.sla<dt&&(isOpen(c)||c.last>dt);}
+function monthEnds(){const out=[],t=pd(TODAY);for(let k=5;k>=0;k--){const e=new Date(t.getFullYear(),t.getMonth()-k+1,0);let s=iso(e);if(s>TODAY)s=TODAY;out.push({d:s,l:MON[e.getMonth()]+' '+String(e.getFullYear()).slice(2)});}return out;}
+/* Institutional risk: illustrative transparent rule set */
+function riskOf(i){
+ const cs=S.cases.filter(c=>c.inst===i),open=cs.filter(isOpen);
+ const od=open.filter(c=>slaDays(c)<0);
+ const l30=cs.filter(c=>diff(TODAY,c.recv)<30).length,p30=cs.filter(c=>{const d=diff(TODAY,c.recv);return d>=30&&d<60;}).length;
+ const aw=open.filter(c=>c.status==='Awaiting Department Response'&&sinceAction(c)>=7);
+ const cc={};open.forEach(c=>{cc[c.cat]=(cc[c.cat]||0)+1;});
+ const repCats=Object.keys(cc).filter(k=>cc[k]>=2);
+ const rep=open.filter(c=>repCats.includes(c.cat));
+ const hp=open.filter(c=>{const p=priority(c);return p==='High'||p==='Critical';});
+ const ev=S.evidence.filter(e=>cs.some(c=>c.id===e.caseId)&&e.status==='Awaiting Review'&&diff(TODAY,e.date)>14);
+ const refs=a=>a.slice(0,4).map(c=>c.id.slice(10)).join(', ')||'none';
+ const ind=[
+  {k:'od',label:'Repeated overdue cases',w:.25,score:Math.min(100,od.length*14),ev:od.length+' open case(s) are past their SLA deadline (cases '+refs(od)+').',cases:od,fix:'Hold a weekly overdue-case review with department heads.'},
+  {k:'vol',label:'Increasing complaint volume',w:.15,score:p30?clamp((l30/p30-1)*100,0,100):(l30>3?50:0),ev:l30+' complaints received in the last 30 days versus '+p30+' in the previous 30 days.',cases:cs.filter(c=>diff(TODAY,c.recv)<30),fix:'Review intake channels and common root causes for the recent increase.'},
+  {k:'resp',label:'Poor departmental response',w:.2,score:Math.min(100,aw.length*25),ev:aw.length+' case(s) awaiting a departmental response for 7+ days (cases '+refs(aw)+').',cases:aw,fix:'Set a written response deadline for each department with escalation to the head.'},
+  {k:'rep',label:'Repeated issues across periods',w:.1,score:Math.min(100,repCats.length*25),ev:repCats.length?repCats.join(', ')+' each have two or more open cases.':'No category has more than one open case.',cases:rep,fix:'Commission a root-cause review of repeating categories.'},
+  {k:'hp',label:'Unresolved high-priority complaints',w:.2,score:Math.min(100,hp.length*16),ev:hp.length+' open case(s) rated High or Critical by the illustrative priority rules (cases '+refs(hp)+').',cases:hp,fix:'Assign a named senior officer to each High/Critical case.'},
+  {k:'evd',label:'Evidence-verification delays',w:.1,score:Math.min(100,ev.length*34),ev:ev.length+' evidence reference(s) awaiting review for more than 14 days.',cases:ev.map(e=>caseById(e.caseId)).filter(Boolean),fix:'Clear the evidence-review backlog within one week.'}
+ ];
+ const total=Math.round(sum(ind.map(x=>x.score*x.w)));
+ const level=total<25?'Low':total<40?'Moderate':total<55?'High':'Critical';
+ return {i,ind,total,level,od,open,cs};
+}
+const lvlK={Low:'ok',Moderate:'info',High:'warn',Critical:'crit'};
+function dupPairs(cs){const ids=new Set(cs.map(c=>c.id));return S.overlaps.filter(o=>(o.review==='Potential Match'||o.review==='Under Review')&&(ids.has(o.a)||ids.has(o.b))).length;}
+/* Alerts are derived from the live records so they always agree with the case views */
+function allAlerts(){
+ const A=[],open=S.cases.filter(isOpen);
+ open.forEach(c=>{
+  const sd=slaDays(c),since=sinceAction(c);
+  if(overdueNext(c)){const n=diff(TODAY,c.next);A.push({id:'ovd:'+c.id,type:'Overdue action',sev:n>=7?'Critical':'High',date:c.next,text:'The next action on '+c.id+' was due '+n+' days ago and no action has been recorded.',cs:c.id,rec:recAction(c)});}
+  else if(sd>=0&&sd<=3)A.push({id:'dl:'+c.id,type:'Approaching deadline',sev:sd<=1?'High':'Medium',date:TODAY,text:c.id+' reaches its SLA deadline in '+sd+' day(s).',cs:c.id,rec:'Confirm the completion plan before '+fmt(c.sla)+'.'});
+  if(!c.officer)A.push({id:'un:'+c.id,type:'Unassigned case',sev:diff(TODAY,c.recv)>14?'High':'Medium',date:c.recv,text:c.id+' has no assigned officer.',cs:c.id,rec:'Assign a responsible officer.'});
+  if(c.status==='Awaiting Department Response'&&since>=7)A.push({id:'aw:'+c.id,type:'Unanswered departmental request',sev:since>=14?'Critical':'High',date:c.last,text:c.dept+' has not responded on '+c.id+' for '+since+' days.',cs:c.id,rec:'Send a reminder and escalate to the department head.'});
+ });
+ S.overlaps.filter(o=>o.review==='Potential Match').forEach(o=>A.push({id:'dup:'+o.id,type:'Potential duplicate complaint',sev:'Medium',date:TODAY,text:o.a+' and '+o.b+' may describe the same issue (illustrative similarity '+o.sim+'%).',cs:o.a,rec:'Review both cases and record an outcome. Do not merge automatically.'}));
+ INST.forEach((x,i)=>{const r=riskOf(i);if(r.level==='High'||r.level==='Critical')A.push({id:'risk:'+i,type:'Emerging institutional risk',sev:r.level==='Critical'?'Critical':'High',date:TODAY,text:x.name+' is at '+r.level+' illustrative risk (score '+r.total+').',cs:r.od[0]?r.od[0].id:'',inst:i,rec:'Open the risk signals view and review contributing cases.'});});
+ S.evidence.filter(e=>e.status==='Awaiting Review'&&diff(TODAY,e.date)>14).forEach(e=>A.push({id:'ev:'+e.id,type:'Evidence requires verification',sev:diff(TODAY,e.date)>30?'Medium':'Low',date:e.date,text:e.id+' ('+e.type+') has awaited review for '+diff(TODAY,e.date)+' days.',cs:e.caseId,rec:'Review the reference and update its verification status.'}));
+ const o={Critical:0,High:1,Medium:2,Low:3};
+ return A.sort((a,b)=>o[a.sev]-o[b.sev]||(a.date<b.date?-1:1));
+}
+function filterCases(f,list){
+ list=list||S.cases;const q=(f.q||'').trim().toLowerCase();
+ return list.filter(c=>{
+  const i=INST[c.inst];
+  if(f.inst!==undefined&&f.inst!==''&&c.inst!==+f.inst)return false;
+  if(f.state&&i.state!==f.state)return false;
+  if(f.dept&&c.dept!==f.dept)return false;
+  if(f.status&&c.status!==f.status)return false;
+  if(f.prio&&priority(c)!==f.prio)return false;
+  if(f.sla&&slaState(c)!==f.sla)return false;
+  if(f.cat&&c.cat!==f.cat)return false;
+  if(f.from&&c.recv<f.from)return false;
+  if(f.to&&c.recv>f.to)return false;
+  if(q){const hay=[c.id,c.title,i.name,c.dept,c.officer,c.cat].concat(caseEvidence(c).map(e=>e.id+' '+e.src)).join(' ').toLowerCase();if(!hay.includes(q))return false;}
+  return true;});
+}
+
+/* =====================================================================
+   5. UI STATE AND HELPERS
+   ===================================================================== */
+const ui={view:'dash',tbl:{},post:[],inst:0,twin:'CASE-2026-0142',twinTab:'summary',depSel:'DEP-01',mapSel:null,
+ f:{dash:{inst:'',range:'90'},cases:{q:'',status:'',inst:'',dept:'',prio:''},gap:{type:''},hist:{inst:'',q:'',dept:'',type:'',from:'',to:''},
+  search:{q:'',inst:'',state:'',dept:'',status:'',prio:'',sla:'',from:'',to:'',cat:''},alerts:{sev:'',unread:false},rep:{inst:'',range:'180'},
+  risk:{inst:'0'},map:{inst:'0',q:'',mode:'graph'},overlap:{status:''},evid:{status:''}},
+ applied:{search:{}},live:{paused:false,feed:null,newCount:0},demo:{on:false,step:0}};
+const charts=[];
+/* One college selection shared by Central Dashboard, Institution Profile, Risk Signals and Relationship Map */
+function syncInst(v){
+ if(v===''||v==null){ui.f.dash.inst='';return;}
+ const k=String(v);ui.f.dash.inst=k;ui.inst=+v;ui.f.risk.inst=k;ui.f.map.inst=k;ui.mapSel=null;
+}
+function destroyCharts(){while(charts.length){try{charts.pop().destroy();}catch(e){}}}
+const IC={dash:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+ live:'<polyline points="3 12 7 12 10 4 14 20 17 12 21 12"/>',inst:'<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/>',
+ risk:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',map:'<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7l8 1M7 8l4 8M17 10l-4 6"/>',
+ cases:'<path d="M5 3h10l4 4v14H5z"/><path d="M9 11h6M9 15h6"/>',gaps:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',overlap:'<rect x="3" y="3" width="12" height="12"/><rect x="9" y="9" width="12" height="12"/>',
+ history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 8v4l3 2"/>',blind:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
+ twin:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',deps:'<rect x="3" y="9" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/><path d="M9 12h3l3-6M12 12l3 6"/>',
+ evidence:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 14l2 2 4-4"/>',priority:'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/>',alerts:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',reports:'<path d="M4 20V4M4 20h16"/><rect x="8" y="12" width="3" height="6"/><rect x="14" y="7" width="3" height="11"/>'};
+const NAV=[['OVERVIEW',[['dash','Central Dashboard'],['live','Live Monitoring']]],
+ ['INSTITUTION',[['inst','Institution Profile'],['risk','Institutional Risk Signals'],['map','Issue Relationship Map']]],
+ ['CASE MANAGEMENT',[['cases','Complaint Tracking'],['gaps','Action Gap Detector'],['overlap','Overlap Detection'],['history','Action History'],['blind','Complaint Blind-Spot Detector'],['twin','Complaint view']]],
+ ['INTELLIGENCE & EVIDENCE',[['deps','Department Dependencies'],['evidence','Evidence Provenance'],['priority','Explainable Priority Engine']]],
+ ['ADMINISTRATION',[['search','Search & Filters'],['alerts','Alerts & Notifications'],['reports','Reports & Analytics']]]];
+function buildNav(){
+ $('#nav').innerHTML=NAV.map(g=>'<div class="nsec">'+esc(g[0])+'</div>'+g[1].map(i=>'<button class="nit" data-v="'+i[0]+'" title="'+esc(i[1])+'"><svg class="ico" viewBox="0 0 24 24">'+IC[i[0]]+'</svg><span>'+esc(i[1])+'</span></button>').join('')).join('');
+ document.querySelectorAll('.nit').forEach(b=>b.onclick=()=>go(b.dataset.v));
+}
+const badge=(t,k)=>'<span class="badge b-'+k+'">'+esc(t)+'</span>';
+const prioBadge=p=>badge(p,{Critical:'crit',High:'warn',Medium:'info',Low:'neutral'}[p]||'neutral');
+const statusBadge=s=>badge(s,{New:'neutral','Under Review':'info','Awaiting Department Response':'warn','In Progress':'info',Escalated:'crit',Resolved:'ok',Closed:'neutral'}[s]||'neutral');
+function slaBadge(c){const s=slaState(c),d=slaDays(c);return badge(s==='Breached'?'Breached ('+(-d)+'d)':s==='Due ≤ 7 days'?'Due in '+d+'d':s,{Breached:'crit','Due ≤ 7 days':'warn','Within SLA':'ok',Completed:'neutral'}[s]);}
+const caseLink=id=>'<button class="lnk" onclick="App.openCase(\''+id+'\')">'+esc(id)+'</button>';
+const sevK={Critical:'crit',High:'warn',Medium:'teal',Low:'neutral'};
+function selectH(id,opts,val,fn,all){return '<select id="'+id+'" onchange="'+fn+'">'+(all!==undefined?'<option value="">'+esc(all)+'</option>':'')+opts.map(o=>{const v=Array.isArray(o)?o[0]:o,l=Array.isArray(o)?o[1]:o;return '<option value="'+esc(v)+'"'+(String(v)===String(val)?' selected':'')+'>'+esc(l)+'</option>';}).join('')+'</select>';}
+const instOpts=()=>INST.map((x,i)=>[i,x.name]);
+const fld=(label,html)=>'<label class="fld">'+esc(label)+html+'</label>';
+function pageHead(t,sub,acts){return '<div class="ph"><div><h2>'+esc(t)+'</h2><p>'+esc(sub)+'</p></div><div class="pa noprint">'+(acts||'')+'</div></div>';}
+function card(title,body,acts,attrs){return '<section class="card" '+(attrs||'')+'><div class="ch"><h3>'+esc(title)+'</h3><div class="pa">'+(acts||'')+'</div></div>'+body+'</section>';}
+/* Generic sortable, paginated table. cols: {h,r(row)->html,s(row)->sortValue} */
+function table(id,cols,rows,opt){
+ opt=opt||{};const t=ui.tbl[id]||(ui.tbl[id]={page:1,sort:null,dir:1});
+ let r=rows.slice();
+ if(t.sort!=null&&cols[t.sort]&&cols[t.sort].s){const s=cols[t.sort].s;r.sort((a,b)=>{const x=s(a),y=s(b);return (x>y?1:x<y?-1:0)*t.dir;});}
+ const ps=opt.ps||12,pages=Math.max(1,Math.ceil(r.length/ps));if(t.page>pages)t.page=pages;
+ const sl=r.slice((t.page-1)*ps,t.page*ps);
+ const head='<tr>'+cols.map((c,i)=>'<th'+(c.s?' class="s" onclick="App.srt(\''+id+'\','+i+')"':'')+'>'+esc(c.h)+(t.sort===i?(t.dir>0?' ▲':' ▼'):'')+'</th>').join('')+'</tr>';
+ const body=sl.length?sl.map(x=>'<tr '+(opt.rowAttr?opt.rowAttr(x):'')+'>'+cols.map(c=>'<td>'+c.r(x)+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+cols.length+'" class="empty">No records match the current criteria.</td></tr>';
+ const a=r.length?(t.page-1)*ps+1:0,b=Math.min(r.length,t.page*ps);
+ const pager=opt.nopager?'':'<div class="pager"><span>Showing '+a+'–'+b+' of '+r.length+' record(s)</span><span><button class="btn btn-sm" '+(t.page<=1?'disabled':'')+' onclick="App.pg(\''+id+'\','+(t.page-1)+')">Previous</button> &nbsp;Page '+t.page+' of '+pages+'&nbsp; <button class="btn btn-sm" '+(t.page>=pages?'disabled':'')+' onclick="App.pg(\''+id+'\','+(t.page+1)+')">Next</button></span></div>';
+ return '<div class="tw"><table class="tbl"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+pager;
+}
+function chart(id,cfg){
+ const cv=document.getElementById(id);if(!cv)return;
+ if(typeof Chart==='undefined'){
+  const L=cfg.data.labels,D=cfg.data.datasets;
+  cv.outerHTML='<div class="fallback"><p class="muted xs">Chart library unavailable (offline). Data is shown as a table instead.</p><table class="tbl"><thead><tr><th></th>'+D.map(d=>'<th>'+esc(d.label||'Value')+'</th>').join('')+'</tr></thead><tbody>'+L.map((l,i)=>'<tr><td>'+esc(l)+'</td>'+D.map(d=>'<td>'+esc(d.data[i])+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+  return;}
+ Chart.defaults.font.family='"Segoe UI",Arial,sans-serif';Chart.defaults.color=C.tick;
+ charts.push(new Chart(cv,cfg));
+}
+function bopts(o){o=o||{};
+ const p={responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:o.legend!==false,position:'bottom',labels:{boxWidth:10,font:{size:11}}}}};
+ if(o.noScale)return p;
+ const val={beginAtZero:true,title:{display:!!o.vt,text:o.vt},ticks:{precision:0,font:{size:10},color:C.tick},grid:{color:C.grid}};
+ const cat={title:{display:!!o.ct,text:o.ct},grid:{display:false},ticks:{font:{size:10},color:C.tick,maxRotation:o.rot==null?0:o.rot,autoSkip:true}};
+ if(o.h){p.indexAxis='y';p.scales={x:val,y:cat};}else p.scales={x:cat,y:val};
+ return p;}
+const PAL={light:{navy:'#172B4D',blue:'#315B83',steel:'#647C96',teal:'#247C78',amber:'#C58A32',red:'#B74747',green:'#3C8061',light:'#B9C6D4',grid:'#EDF1F5',tick:'#1F4E8C',ring:'#FFFFFF'},
+ dark:{navy:'#9CC3EA',blue:'#5B9BD5',steel:'#8FA9C6',teal:'#3FB5AE',amber:'#E0A84A',red:'#E26B6B',green:'#4FB583',light:'#5C7391',grid:'#2A3C58',tick:'#A9D0F5',ring:'#152238'}};
+const C=Object.assign({},PAL.light);
+function applyTheme(t,noSave){
+ document.documentElement.setAttribute('data-theme',t);ui.theme=t;Object.assign(C,PAL[t]);
+ if(typeof Chart!=='undefined')Chart.defaults.color=C.tick;
+ if(!noSave){try{localStorage.setItem('igcms_theme',t);}catch(e){}}
+ const b=$('#themeBtn'),i=$('#themeIco');
+ if(b){b.title=t==='dark'?'Switch to light mode':'Switch to dark mode';}
+ if(i)i.innerHTML=t==='dark'?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+}
+function spark(v){const w=84,h=22,mx=Math.max.apply(null,v.concat([1])),pts=v.map((x,i)=>(i*(w-2)/(v.length-1)+1).toFixed(1)+','+(h-2-(x/mx)*(h-4)).toFixed(1)).join(' ');return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><polyline points="'+pts+'" fill="none" stroke="#647C96" stroke-width="1.5"/></svg>';}
+function toast(msg,kind){const t=document.createElement('div');t.className='toast '+(kind||'');t.textContent=msg;$('#toast').appendChild(t);setTimeout(()=>t.remove(),3400);}
+function openOv(){$('#ov').classList.add('on');}
+function closeAll(){['#drawer','#modal','#ov'].forEach(s=>$(s).classList.remove('on'));$('#profMenu').classList.remove('on');}
+function modal(title,body,foot){$('#modal').innerHTML='<div class="mh"><h3>'+esc(title)+'</h3><button class="btn btn-sm" onclick="App.closeAll()">Close</button></div><div class="mb">'+body+'</div>'+(foot?'<div class="mf">'+foot+'</div>':'');$('#modal').classList.add('on');$('#drawer').classList.remove('on');openOv();}
+function csvCell(v){v=v==null?'':String(v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+const CSVCOLS=[['Case ID',c=>c.id],['Title',c=>c.title],['Institution',c=>INST[c.inst].name],['State',c=>INST[c.inst].state],['Department',c=>c.dept],['Category',c=>c.cat],['Date received',c=>c.recv],['Status',c=>c.status],['Assigned officer',c=>c.officer||'Unassigned'],['Last action date',c=>c.last],['Next action due',c=>c.next||''],['SLA deadline',c=>c.sla],['Days without action',c=>isOpen(c)?sinceAction(c):''],['SLA condition',c=>slaState(c)],['Priority (illustrative)',c=>priority(c)]];
+function exportCSV(cs,name){
+ const rows=[CSVCOLS.map(c=>c[0])].concat(cs.map(c=>CSVCOLS.map(k=>k[1](c))));
+ const csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=name;document.body.appendChild(a);a.click();
+ setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},600);toast('Exported '+cs.length+' record(s) to '+name);
+}
+function addHist(c,prev,action,note,time){S.hist.push({ts:time||nowTs(),caseId:c.id,prev:prev,next:c.status,action:action,officer:c.officer||'Unassigned',dept:c.dept,note:note,sim:false});}
+
+/* =====================================================================
+   6. VIEWS
+   ===================================================================== */
+const VIEWS={};
+/* ---- Central dashboard ---- */
+VIEWS.dash=function(){
+ const f=ui.f.dash,instF=f.inst===''?null:+f.inst,win=f.range==='all'?null:+f.range;
+ const base=S.cases.filter(c=>instF==null||c.inst===instF);
+ const inWin=cs=>win?cs.filter(c=>diff(TODAY,c.recv)<win):cs;
+ const cur=inWin(base),rangeAll=inWin(S.cases);
+ const prev=win?base.filter(c=>{const d=diff(TODAY,c.recv);return d>=win&&d<2*win;}):null;
+ const kp=cs=>({total:cs.length,open:cs.filter(isOpen).length,overdue:cs.filter(overdueNext).length,pend:cs.filter(c=>c.status==='Awaiting Department Response').length,dup:dupPairs(cs)});
+ const a=kp(cur),b=prev?kp(prev):null;
+ const wk=fn=>Array.from({length:8},(_,i)=>base.filter(c=>{const d=diff(TODAY,c.recv);return d>=(7-i)*7&&d<(8-i)*7&&fn(c);}).length);
+ const hr=INST.map((x,i)=>riskOf(i)).filter((r,i)=>(instF==null||i===instF)&&(r.level==='High'||r.level==='Critical')).length;
+ const K=[['Total Complaints',a.total,b&&b.total,wk(()=>true),'d-b',false],['Open Cases',a.open,b&&b.open,wk(isOpen),'d-b',true],['Overdue Actions',a.overdue,b&&b.overdue,wk(overdueNext),a.overdue?'d-r':'d-g',true],
+  ['Pending Institutional Responses',a.pend,b&&b.pend,wk(c=>c.status==='Awaiting Department Response'),a.pend?'d-a':'d-g',true],['Potential Duplicate Cases',a.dup,b&&b.dup,null,a.dup?'d-a':'d-g',true],['High-Risk Institutions',hr,null,null,hr?'d-r':'d-g',true]];
+ const kpis=K.map(k=>{let d='';
+  if(k[2]!=null){const x=k[1]-k[2];d='<span class="'+(x>0&&k[5]?'up-bad':x<0&&k[5]?'dn-good':'')+'">'+(x>0?'▲ +':x<0?'▼ ':'● ')+x+'</span> vs prior '+win+' days ('+k[2]+')';}
+  else d=k[0]==='High-Risk Institutions'?'of '+(instF==null?INST.length:1)+' (illustrative scale)':win?'No prior-period data':'All records';
+  return '<div class="kpi"><div class="kpi-l"><span class="dot '+k[4]+'"></span>'+esc(k[0])+'</div><div class="kpi-v">'+k[1]+'</div><div class="kpi-d">'+d+'</div>'+(k[3]?spark(k[3]):'')+'</div>';}).join('');
+ const reg=cur.filter(isOpen).sort((x,y)=>pScore(y).score-pScore(x).score);
+ const regCols=[{h:'Case ID',r:c=>caseLink(c.id),s:c=>c.id},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Issue category',r:c=>esc(c.cat),s:c=>c.cat},{h:'Responsible department',r:c=>esc(c.dept),s:c=>c.dept},
+  {h:'Days pending',r:c=>diff(TODAY,c.recv),s:c=>diff(TODAY,c.recv)},{h:'SLA status',r:slaBadge,s:c=>slaDays(c)},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score},{h:'Recommended administrative action',r:c=>esc(recAction(c))},{h:'',r:c=>'<button class="btn btn-sm" onclick="App.openCase(\''+c.id+'\')">View Case</button>'}];
+ const perf=table('dperf',[{h:'Institution (click to select)',r:x=>'<button class="lnk" onclick="App.pickInst('+x.i+')">'+esc(x.n)+'</button>',s:x=>x.n},{h:'Pending',r:x=>x.p,s:x=>x.p},{h:'Overdue (SLA)',r:x=>x.o,s:x=>x.o},{h:'Avg resolution (days)',r:x=>x.a==null?'—':x.a,s:x=>x.a==null?-1:x.a},{h:'Response compliance',r:x=>'<div style="display:flex;gap:8px;align-items:center"><div class="bar" style="width:80px"><i style="width:'+x.c+'%"></i></div>'+x.c+'%</div>',s:x=>x.c}],
+  INST.map((x,i)=>{const cs=rangeAll.filter(c=>c.inst===i);return {i:i,n:x.name,p:cs.filter(isOpen).length,o:cs.filter(c=>isOpen(c)&&slaDays(c)<0).length,a:avgResolution(cs),c:compliance(cs)};}),{nopager:true});
+ ui.post.push(()=>{
+  const days=[];for(let i=29;i>=0;i--)days.push(ago(i));
+  chart('ch-trend',{type:'line',data:{labels:days.map(d=>pd(d).getDate()+' '+MON[pd(d).getMonth()]),datasets:[{label:'Received',data:days.map(d=>base.filter(c=>c.recv===d).length),borderColor:C.blue,backgroundColor:C.blue,tension:.25,pointRadius:2,borderWidth:2},{label:'Resolved / closed',data:days.map(d=>base.filter(c=>!isOpen(c)&&c.last===d).length),borderColor:C.teal,backgroundColor:C.teal,tension:.25,pointRadius:2,borderWidth:2}]},options:bopts({vt:'Complaints per day',ct:'Date (last 30 days)',rot:45})});
+  const sc=STATUSES.map(s=>cur.filter(c=>c.status===s).length);
+  chart('ch-status',{type:'doughnut',data:{labels:STATUSES,datasets:[{data:sc,backgroundColor:['#9AA6B4',C.blue,C.amber,C.steel,C.red,C.green,'#2E4A66'],borderColor:C.ring,borderWidth:2}]},options:Object.assign(bopts({noScale:true}),{cutout:'58%'})});
+  chart('ch-pend',{type:'bar',data:{labels:INST.map(x=>x.short),datasets:[{label:'Open cases',data:INST.map((x,i)=>rangeAll.filter(c=>c.inst===i&&isOpen(c)).length),backgroundColor:C.blue}]},options:Object.assign(bopts({h:true,legend:false,vt:'Open cases'}),{onClick:(e,el)=>{if(el.length)App.pickInst(el[0].index);},onHover:(e,el)=>{e.native.target.style.cursor=el.length?'pointer':'default';}})});
+  const dd=DEPTS.map(d=>[d,cur.filter(c=>c.dept===d&&overdueNext(c)).length]).filter(x=>x[1]>0).sort((x,y)=>y[1]-x[1]);
+  chart('ch-dept',{type:'bar',data:{labels:dd.map(x=>trunc(x[0],24)),datasets:[{label:'Overdue actions',data:dd.map(x=>x[1]),backgroundColor:C.amber}]},options:bopts({h:true,legend:false,vt:'Overdue actions'})});
+ });
+ const rangeSel=selectH('d-range',[['7','Last 7 days'],['30','Last 30 days'],['90','Last 90 days'],['180','Last 180 days'],['all','All records']],f.range,"App.setF('dash','range',this.value)");
+ const instSel=selectH('d-inst',instOpts(),f.inst,"App.setF('dash','inst',this.value)",'All institutions');
+ return pageHead('Institutional Overview','Complaint status, institutional accountability, and emerging issues',rangeSel+instSel)+
+  '<div class="note"><div class="selbar">'+(instF==null?'<span><b>All colleges shown.</b> Choose a college in the filter, click its name in the table below, or click a bar in “Institution-wise pending cases” — the choice carries into Institution Profile, Risk Signals and Relationship Map.</span>':'<span><b>Selected college: '+esc(INST[instF].name)+'</b> — now shown in:</span><button class="btn btn-sm" onclick="App.go(\'inst\')">Institution Profile</button><button class="btn btn-sm" onclick="App.go(\'risk\')">Risk Signals</button><button class="btn btn-sm" onclick="App.go(\'map\')">Relationship Map</button><button class="btn btn-sm" onclick="App.pickInst('+instF+')">Show all colleges</button>')+'</div></div>'+
+  '<div class="kpis" data-hl="kpis">'+kpis+'</div>'+
+  '<div class="g2"><section class="card"><div class="ch"><h3>Complaint trend — past 30 days</h3></div><div class="cb"><div class="chbox"><canvas id="ch-trend" aria-label="Line chart of complaints received and resolved per day"></canvas></div></div></section>'+
+  '<section class="card"><div class="ch"><h3>Status distribution</h3><span class="muted xs">'+cur.length+' complaints in range</span></div><div class="cb"><div class="chbox"><canvas id="ch-status" aria-label="Doughnut chart of complaint status distribution"></canvas></div></div></section></div>'+
+  '<div class="g2e"><section class="card"><div class="ch"><h3>Institution-wise pending cases</h3></div><div class="cb"><div class="chbox"><canvas id="ch-pend"></canvas></div></div></section>'+
+  '<section class="card"><div class="ch"><h3>Department-wise overdue actions</h3></div><div class="cb"><div class="chbox"><canvas id="ch-dept"></canvas></div></div></section></div>'+
+  card('Resolution time and response compliance by institution',perf,'<span class="muted xs">Compliance = share of cases meeting their SLA deadline</span>')+
+  card('Priority action register',table('dreg',regCols,reg,{ps:8}),'<span class="muted xs">Ranked by illustrative priority rules</span>');
+};
+/* ---- Live monitoring ---- */
+function liveFeed(){
+ if(!ui.live.feed)ui.live.feed=S.hist.slice().sort((a,b)=>a.ts<b.ts?1:-1).slice(0,10).map(h=>({ts:h.ts,txt:h.caseId+': '+h.action+(h.next!==h.prev?' ('+h.prev+' → '+h.next+')':'')+'.',sim:h.sim}));
+ return ui.live.feed;
+}
+function simEvent(){
+ const open=S.cases.filter(isOpen),c=open[Math.floor(Math.random()*open.length)],i=Math.floor(Math.random()*INST.length),r=Math.random();
+ let txt;
+ if(r<.3){ui.live.newCount++;txt='New complaint registered at '+INST[i].short+' — '+TPL[CATS[Math.floor(Math.random()*CATS.length)]][0]+' (simulated sample).';}
+ else if(r<.6)txt=c.dept+' logged a response on '+c.id+' (simulated sample).';
+ else if(r<.8)txt='Reminder issued to '+c.dept+' for '+c.id+' (simulated sample).';
+ else txt='Evidence reference added to '+c.id+' (simulated sample).';
+ liveFeed().unshift({ts:nowTs(),txt:txt,sim:true,fresh:true});ui.live.feed=ui.live.feed.slice(0,40);
+}
+VIEWS.live=function(){
+ const open=S.cases.filter(isOpen),od=open.filter(c=>slaDays(c)<0),today=S.cases.filter(c=>c.recv===TODAY).length+ui.live.newCount;
+ const crit=open.filter(c=>priority(c)==='Critical');
+ const upd=S.hist.slice().sort((a,b)=>a.ts<b.ts?1:-1).filter(h=>h.action==='Status updated'&&h.next!==h.prev).slice(0,5);
+ const act=DEPTS.map(d=>[d,S.hist.filter(h=>h.dept===d&&diff(TODAY,h.ts)<=14).length,open.filter(c=>c.dept===d&&c.status==='Awaiting Department Response').length]).filter(x=>x[1]||x[2]).sort((a,b)=>b[1]-a[1]);
+ const feed=liveFeed().slice(0,14).map(e=>'<li class="'+(e.sim?'sim':'')+'"><div class="xs muted">'+fmtT(e.ts)+' · '+(e.sim?'Simulated / sample':'Recorded')+'</div>'+esc(e.txt)+'</li>').join('');
+ const tl=ui.live.paused?'paused':'';
+ return pageHead('Live Monitoring','Simulated activity feed over the demonstration register',
+  '<span class="badge b-warn">DEMO DATA</span><span class="live '+tl+'"><i></i>'+(ui.live.paused?'Feed paused':'Simulation running')+'</span><button class="btn" onclick="App.togglePause()">'+(ui.live.paused?'Resume feed':'Pause feed')+'</button>')+
+  '<div class="note">This screen is not connected to any institutional system. New events are generated locally in your browser every few seconds and change only demonstration counters.</div>'+
+  '<div class="kpis"><div class="kpi"><div class="kpi-l">Open cases</div><div class="kpi-v">'+open.length+'</div></div><div class="kpi"><div class="kpi-l">Overdue (SLA breached)</div><div class="kpi-v">'+od.length+'</div></div>'+
+  '<div class="kpi"><div class="kpi-l">New complaints today</div><div class="kpi-v">'+today+'</div><div class="kpi-d">includes simulated: '+ui.live.newCount+'</div></div><div class="kpi"><div class="kpi-l">Immediate attention (Critical)</div><div class="kpi-v">'+crit.length+'</div></div></div>'+
+  '<div class="g2"><section class="card"><div class="ch"><h3>Chronological event feed</h3></div><div class="cb"><ul class="tl">'+feed+'</ul></div></section><div>'+
+  card('Recent institutional updates','<div class="cb">'+(upd.map(h=>'<p style="margin:0 0 9px"><span class="xs muted">'+fmt(h.ts)+'</span><br>'+caseLink(h.caseId)+' — '+esc(h.prev)+' → '+esc(h.next)+'</p>').join('')||'—')+'</div>')+
+  card('Department response activity',table('lact',[{h:'Department',r:x=>esc(x[0])},{h:'Events (14d)',r:x=>x[1]},{h:'Awaiting',r:x=>x[2]}],act,{nopager:true}))+'</div></div>'+
+  card('Cases requiring immediate attention',table('lcrit',[{h:'Case',r:c=>caseLink(c.id)},{h:'Institution',r:c=>esc(INST[c.inst].short)},{h:'Gap',r:c=>esc(gaps(c).slice(0,1).map(g=>GAPL[g.k]).join(''))},{h:'Priority',r:c=>prioBadge(priority(c))}],crit,{ps:6}));
+};
+/* ---- Institution profile ---- */
+VIEWS.inst=function(){
+ const i=ui.inst,x=INST[i],cs=S.cases.filter(c=>c.inst===i),open=cs.filter(isOpen),od=open.filter(c=>slaDays(c)<0);
+ const ar=avgResponse(cs),res=cs.filter(c=>!isOpen(c));
+ const ind=[['SLA compliance',compliance(cs)],['Cases with an assigned officer',pct(cs.filter(c=>c.officer).length,cs.length)],['Cases with documented follow-up',pct(cs.filter(c=>c.fu).length,cs.length)],['Acknowledged within 3 days',pct(cs.filter(c=>{const h=caseHist(c).find(y=>y.action==='Acknowledged; assigned for review');return h&&diff(h.ts,c.recv)<=3;}).length,cs.length)],['Evidence references reviewed',(()=>{const e=S.evidence.filter(y=>cs.some(c=>c.id===y.caseId));return e.length?pct(e.filter(y=>y.status==='Reviewed – Consistent').length,e.length):0;})()]];
+ const ik=ind.map(a=>'<tr><td>'+esc(a[0])+'</td><td style="width:45%"><div class="bar"><i style="width:'+a[1]+'%;background:'+(a[1]>=80?C.green:a[1]>=60?C.amber:C.red)+'"></i></div></td><td class="right"><b>'+a[1]+'%</b></td></tr>').join('');
+ const dp=DEPTS.map(d=>{const z=cs.filter(c=>c.dept===d);return {d:d,n:z.length,o:z.filter(isOpen).length,v:z.filter(c=>isOpen(c)&&slaDays(c)<0).length,r:z.length?pct(z.filter(c=>!isOpen(c)).length,z.length):0};}).filter(z=>z.n);
+ const recent=S.hist.filter(h=>cs.some(c=>c.id===h.caseId)).sort((a,b)=>a.ts<b.ts?1:-1).slice(0,7);
+ return pageHead('Institution Profile','Fictional demonstration institutions — not real organisations',fld('College (synced with Central Dashboard)',selectH('i-sel',instOpts(),i,"App.setInst(this.value)")))+
+  '<div class="g2"><section class="card"><div class="ch"><h3>'+esc(x.name)+'</h3><span class="badge b-neutral">'+esc(x.id)+'</span></div><div class="cb"><dl class="kv"><dt>Institution type</dt><dd>'+esc(x.type)+'</dd><dt>State / district</dt><dd>'+esc(x.state)+' / '+esc(x.district)+'</dd><dt>Responsible officer</dt><dd>'+esc(x.officer)+'</dd><dt>Departments</dt><dd>'+x.depts+'</dd><dt>Complaints received</dt><dd>'+cs.length+'</dd><dt>Pending / overdue</dt><dd>'+open.length+' pending · '+od.length+' past SLA</dd><dt>Resolution rate</dt><dd>'+pct(res.length,cs.length)+'% ('+res.length+' resolved or closed)</dd><dt>Avg response time</dt><dd>'+(ar==null?'—':ar.toFixed(1)+' days to first recorded action')+'</dd><dt>Risk (illustrative)</dt><dd>'+badge(riskOf(i).level,lvlK[riskOf(i).level])+' <button class="lnk" onclick="App.goRisk('+i+')">View indicators</button></dd></dl></div></section>'+
+  card('Compliance indicators','<div class="cb"><table class="tbl"><tbody>'+ik+'</tbody></table></div>')+'</div>'+
+  card('Department-wise performance',table('idept',[{h:'Department',r:z=>esc(z.d),s:z=>z.d},{h:'Cases',r:z=>z.n,s:z=>z.n},{h:'Open',r:z=>z.o,s:z=>z.o},{h:'Past SLA',r:z=>z.v,s:z=>z.v},{h:'Resolution rate',r:z=>z.r+'%',s:z=>z.r}],dp,{nopager:true}))+
+  card('Recent case activity',table('irec',[{h:'Date',r:h=>fmtT(h.ts)},{h:'Case',r:h=>caseLink(h.caseId)},{h:'Action',r:h=>esc(h.action)},{h:'Status',r:h=>esc(h.prev)+' → '+esc(h.next)},{h:'Source',r:h=>h.sim?badge('Sample','neutral'):badge('Recorded','teal')}],recent,{nopager:true}));
+};
+/* ---- Institutional risk signals ---- */
+VIEWS.risk=function(){
+ const i=+ui.f.risk.inst,x=INST[i],r=riskOf(i),all=INST.map((y,k)=>riskOf(k));
+ const meK=monthEnds(),cs=S.cases.filter(c=>c.inst===i);
+ ui.post.push(()=>chart('ch-risk',{type:'line',data:{labels:meK.map(m=>m.l),datasets:[{label:'Cases past SLA at month-end',data:meK.map(m=>cs.filter(c=>overdueAt(c,m.d)).length),borderColor:C.red,backgroundColor:C.red,tension:.2,borderWidth:2},{label:'Complaints received in month',data:meK.map((m,k)=>cs.filter(c=>c.recv.slice(0,7)===m.d.slice(0,7)).length),borderColor:C.steel,backgroundColor:C.steel,tension:.2,borderWidth:2}]},options:bopts({vt:'Cases',ct:'Month'})}));
+ const rows=r.ind.map(n=>'<tr><td><b>'+esc(n.label)+'</b></td><td style="width:140px"><div class="bar"><i style="width:'+Math.round(n.score)+'%;background:'+(n.score>=60?C.red:n.score>=30?C.amber:C.green)+'"></i></div><span class="xs muted">'+Math.round(n.score)+'/100 × weight '+n.w+'</span></td><td>'+esc(n.ev)+'</td></tr>').join('');
+ const dpt={};r.od.concat(r.ind[2].cases).forEach(c=>{dpt[c.dept]=(dpt[c.dept]||0)+1;});
+ const sup=Array.from(new Set(r.ind.reduce((a,n)=>a.concat(n.cases.slice(0,5)),[]).map(c=>c.id))).slice(0,12);
+ const ints=r.ind.filter(n=>n.score>=25).map(n=>'<li>'+esc(n.fix)+'</li>').join('')||'<li>No intervention indicated; continue routine monitoring.</li>';
+ return pageHead('Institutional Risk Signals','Transparent, rule-based indicators with the evidence behind each',fld('College (synced with Central Dashboard)',selectH('r-inst',instOpts(),i,"App.setF('risk','inst',this.value)")))+
+  '<div class="note warn">The score below is illustrative demonstration logic. It is not an official AICTE rating and not a validated risk assessment. Scale: Low (&lt;25) · Moderate (25–39) · High (40–54) · Critical (55+).</div>'+
+  '<div class="g2"><section class="card"><div class="ch"><h3>'+esc(x.name)+'</h3>'+badge(r.level+' risk',lvlK[r.level])+'</div><div class="cb"><div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:32px;font-weight:600;color:var(--navy)">'+r.total+'</span><span class="muted">illustrative score out of 100 (weighted sum of the six indicators)</span></div>'+
+  '<div class="tw"><table class="tbl" style="margin-top:12px"><thead><tr><th>Indicator</th><th>Score</th><th>Evidence behind the indicator</th></tr></thead><tbody>'+rows+'</tbody></table></div></div></section>'+
+  card('Risk trend over time','<div class="cb"><div class="chbox"><canvas id="ch-risk"></canvas></div></div>')+'</div>'+
+  '<div class="g3"><section class="card"><div class="ch"><h3>Affected departments</h3></div><div class="cb">'+(Object.keys(dpt).sort((a,b)=>dpt[b]-dpt[a]).map(d=>'<p style="margin:0 0 6px">'+esc(d)+' <span class="muted">· '+dpt[d]+' flagged case(s)</span></p>').join('')||'<span class="muted">None flagged.</span>')+'</div></section>'+
+  '<section class="card"><div class="ch"><h3>Supporting case references</h3></div><div class="cb">'+(sup.map(caseLink).join(' · ')||'—')+'</div></section>'+
+  '<section class="card"><div class="ch"><h3>Suggested administrative interventions</h3></div><div class="cb"><ul style="margin:0;padding-left:18px">'+ints+'</ul></div></section></div>'+
+  card('All institutions (illustrative scale)',table('rall',[{h:'Institution',r:z=>'<button class="lnk" onclick="App.goRisk('+z.i+')">'+esc(INST[z.i].name)+'</button>',s:z=>INST[z.i].name},{h:'Score',r:z=>z.total,s:z=>z.total},{h:'Level',r:z=>badge(z.level,lvlK[z.level]),s:z=>z.total},{h:'Open',r:z=>z.open.length,s:z=>z.open.length},{h:'Past SLA',r:z=>z.od.length,s:z=>z.od.length}],all,{nopager:true}));
+};
+/* ---- Issue relationship map ---- */
+function buildGraph(){
+ const f=ui.f.map,ii=+f.inst,cs=S.cases.filter(c=>c.inst===ii).sort((a,b)=>(isOpen(b)-isOpen(a))||pScore(b).score-pScore(a).score);
+ const shown=cs.slice(0,12),nodes={},edges=[],cols={inst:[],case:[],dept:[],cat:[],off:[],ev:[]};
+ const add=(t,key,label,data)=>{if(!nodes[key]){nodes[key]={key:key,t:t,label:label,data:data};cols[t].push(nodes[key]);}return nodes[key];};
+ add('inst','i:'+ii,INST[ii].short,INST[ii]);
+ shown.forEach(c=>{add('case','c:'+c.id,c.id,c);edges.push(['i:'+ii,'c:'+c.id]);
+  add('dept','d:'+c.dept,c.dept);edges.push(['c:'+c.id,'d:'+c.dept]);
+  add('cat','k:'+c.cat,c.cat);edges.push(['c:'+c.id,'k:'+c.cat]);
+  if(c.officer){add('off','o:'+c.officer,c.officer);edges.push(['c:'+c.id,'o:'+c.officer]);}
+  caseEvidence(c).forEach(e=>{add('ev','e:'+e.id,e.id,e);edges.push(['c:'+c.id,'e:'+e.id]);});});
+ return {nodes:nodes,edges:edges,cols:cols,shown:shown,total:cs.length};
+}
+VIEWS.map=function(){
+ const f=ui.f.map,g=buildGraph(),W=1100,NW=140,NH=26,GAP=36,xs={inst:10,case:190,dept:380,cat:570,off:760,ev:950};
+ const H=Math.max(200,Math.max.apply(null,Object.values(g.cols).map(a=>a.length))*GAP+40);
+ Object.keys(g.cols).forEach(t=>{const a=g.cols[t],off=(H-a.length*GAP)/2+(GAP-NH)/2;a.forEach((n,k)=>{n.x=xs[t];n.y=off+k*GAP;});});
+ const q=(f.q||'').trim().toLowerCase(),sel=ui.mapSel&&g.nodes[ui.mapSel]?ui.mapSel:null;
+ let lit=null;
+ const nb=k=>{const s=new Set([k]);g.edges.forEach(e=>{if(e[0]===k)s.add(e[1]);if(e[1]===k)s.add(e[0]);});return s;};
+ if(sel)lit=nb(sel);else if(q){lit=new Set();Object.values(g.nodes).forEach(n=>{if(n.label.toLowerCase().includes(q))nb(n.key).forEach(k=>lit.add(k));});}
+ const edgeS=g.edges.map(e=>{const a=g.nodes[e[0]],b=g.nodes[e[1]],x1=a.x+NW,y1=a.y+NH/2,x2=b.x,y2=b.y+NH/2,mx=(x1+x2)/2;const hi=lit&&lit.has(e[0])&&lit.has(e[1])&&(!sel||e[0]===sel||e[1]===sel);return '<path class="edge'+(hi?' hi':lit?' dim':'')+'" d="M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2+'"/>';}).join('');
+ const nodeS=Object.values(g.nodes).map(n=>'<g class="node t-'+n.t+(sel===n.key?' sel':'')+(lit&&!lit.has(n.key)?' dim':'')+'" tabindex="0" role="button" aria-label="'+esc(n.label)+'" onclick="App.mapPick(\''+esc(n.key)+'\')" onkeydown="if(event.key===\'Enter\')App.mapPick(\''+esc(n.key)+'\')"><rect x="'+n.x+'" y="'+n.y+'" width="'+NW+'" height="'+NH+'" rx="4"/><text x="'+(n.x+8)+'" y="'+(n.y+17)+'">'+esc(trunc(n.label,22))+'</text><title>'+esc(n.label)+'</title></g>').join('');
+ const heads=[['inst','Institution'],['case','Complaints'],['dept','Departments'],['cat','Issue categories'],['off','Officers'],['ev','Evidence']].map(h=>'<text x="'+xs[h[0]]+'" y="14" style="font-size:10.5px;font-weight:600;fill:#6B7788;letter-spacing:.04em">'+h[1].toUpperCase()+'</text>').join('');
+ let detail='<p class="muted">Select a node in the graph to see its related records.</p>';
+ if(sel){const n=g.nodes[sel],rel=Array.from(nb(sel)).filter(k=>k!==sel).map(k=>g.nodes[k]);
+  const rc=rel.filter(r=>r.t==='case').map(r=>caseLink(r.label)).join(' · ');
+  detail='<h4>'+esc(n.label)+' <span class="badge b-neutral">'+({inst:'Institution',case:'Complaint',dept:'Department',cat:'Issue category',off:'Officer',ev:'Evidence'}[n.t])+'</span></h4>';
+  if(n.t==='case')detail+='<p>'+esc(n.data.title)+'</p><p>'+statusBadge(n.data.status)+' '+prioBadge(priority(n.data))+' '+slaBadge(n.data)+'</p><p>Department: '+esc(n.data.dept)+' · Officer: '+esc(n.data.officer||'Unassigned')+'</p><p>Evidence: '+(rel.filter(r=>r.t==='ev').map(r=>esc(r.label)).join(', ')||'none on record')+'</p><button class="btn btn-sm" onclick="App.openCase(\''+n.label+'\')">View Case</button>';
+  else if(n.t==='inst')detail+='<p>'+esc(INST[ii].name)+' — '+esc(INST[ii].state)+'</p><p>Showing '+g.shown.length+' of '+g.total+' complaints (open cases first).</p>';
+  else if(n.t==='ev')detail+='<p>'+esc(n.data.src)+'</p><p>'+badge(n.data.status,'info')+'</p><p>Linked case: '+rc+'</p>';
+  else detail+='<p>Related complaints ('+rel.filter(r=>r.t==='case').length+'):</p><p>'+rc+'</p>';}
+ const list=table('mlist',[{h:'Case',r:c=>caseLink(c.id),s:c=>c.id},{h:'Department',r:c=>esc(c.dept),s:c=>c.dept},{h:'Category',r:c=>esc(c.cat),s:c=>c.cat},{h:'Officer',r:c=>esc(c.officer||'Unassigned'),s:c=>c.officer},{h:'Evidence',r:c=>esc(caseEvidence(c).map(e=>e.id).join(', ')||'—')},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score}],g.shown,{ps:12});
+ const body=f.mode==='graph'?
+  '<div class="cb"><div class="lg" style="margin-bottom:10px"><span><i style="background:var(--g-inst)"></i>Institution</span><span><i style="background:var(--g-case)"></i>Complaint</span><span><i style="background:var(--g-dept)"></i>Department</span><span><i style="background:var(--g-cat)"></i>Issue category</span><span><i style="background:var(--g-off)"></i>Officer</span><span><i style="background:var(--g-ev)"></i>Evidence record</span></div><div class="gwrap"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Relationship graph">'+heads+edgeS+nodeS+'</svg></div><p class="muted xs">Showing '+g.shown.length+' of '+g.total+' complaints for this institution (open and highest priority first). Scroll horizontally on narrow screens or switch to list view.</p></div>':list;
+ return pageHead('Issue Relationship Map','Institutions, complaints, departments, categories, officers and evidence',
+  fld('College (synced with Central Dashboard)',selectH('m-inst',instOpts(),f.inst,"App.setMap('inst',this.value)"))+fld('Find node','<input id="m-q" type="search" value="'+esc(f.q)+'" placeholder="e.g. Accounts, 0142" oninput="App.setMap(\'q\',this.value)">')+
+  '<button class="btn '+(f.mode==='graph'?'btn-p':'')+'" onclick="App.setMap(\'mode\',\'graph\')">Graph view</button><button class="btn '+(f.mode==='list'?'btn-p':'')+'" onclick="App.setMap(\'mode\',\'list\')">List view</button>')+
+  '<div class="g2"><section class="card">'+body+'</section>'+card('Node details','<div class="cb">'+detail+(sel?'<p><button class="btn btn-sm" onclick="App.mapPick(null)">Clear selection</button></p>':'')+'</div>')+'</div>';
+};
+/* ---- Complaint tracking ---- */
+const caseCols=()=>[
+ {h:'Case ID',r:c=>caseLink(c.id),s:c=>c.id},{h:'Complaint title',r:c=>esc(c.title),s:c=>c.title},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Department',r:c=>esc(c.dept),s:c=>c.dept},
+ {h:'Category',r:c=>esc(c.cat),s:c=>c.cat},{h:'Received',r:c=>fmt(c.recv),s:c=>c.recv},{h:'Status',r:c=>statusBadge(c.status),s:c=>c.status},{h:'Assigned officer',r:c=>c.officer?esc(c.officer):badge('Unassigned','crit'),s:c=>c.officer},
+ {h:'Last action',r:c=>fmt(c.last),s:c=>c.last},{h:'Next due',r:c=>c.next?fmt(c.next):'—',s:c=>c.next||''},{h:'SLA deadline',r:c=>fmt(c.sla),s:c=>c.sla},{h:'Days w/o action',r:c=>isOpen(c)?sinceAction(c):'—',s:c=>isOpen(c)?sinceAction(c):-1},
+ {h:'SLA',r:slaBadge,s:c=>slaDays(c)},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score}];
+VIEWS.cases=function(){
+ const f=ui.f.cases,rows=filterCases(f);
+ const bar='<div class="fbar">'+fld('Search','<input id="c-q" type="search" value="'+esc(f.q)+'" placeholder="Case ID, title, officer…" oninput="App.setF(\'cases\',\'q\',this.value)">')+fld('Status',selectH('c-st',STATUSES,f.status,"App.setF('cases','status',this.value)",'All statuses'))+fld('Institution',selectH('c-in',instOpts(),f.inst,"App.setF('cases','inst',this.value)",'All institutions'))+fld('Department',selectH('c-dp',DEPTS,f.dept,"App.setF('cases','dept',this.value)",'All departments'))+fld('Priority',selectH('c-pr',['Critical','High','Medium','Low'],f.prio,"App.setF('cases','prio',this.value)",'All priorities'))+'<button class="btn" onclick="App.clearF(\'cases\')">Clear</button></div>';
+ return pageHead('Complaint Tracking','Searchable complaint register — select a case ID to open the detail panel','<button class="btn" onclick="App.exportAll()">Export CSV</button>')+
+  '<section class="card">'+bar+table('cases',caseCols(),rows,{ps:12,rowAttr:c=>'data-hl="row-'+c.id+'"'})+'</section>';
+};
+/* ---- Action gap detector ---- */
+const GAPT=[['missed','Missed action deadlines'],['sla','SLA deadline breached'],['unassigned','No assigned officer'],['nofu','No documented follow-up'],['await','Awaiting departmental response'],['returned','Repeatedly returned'],['stale','No action for 10+ days']];
+VIEWS.gaps=function(){
+ const open=S.cases.filter(isOpen),ty=ui.f.gap.type;
+ const cnt=k=>open.filter(c=>gaps(c).some(g=>g.k===k)).length;
+ const tiles=GAPT.map(t=>'<button class="tile '+(ty===t[0]?'on':'')+'" onclick="App.setF(\'gap\',\'type\',\''+(ty===t[0]?'':t[0])+'\')"><b>'+cnt(t[0])+'</b><span>'+t[1]+'</span></button>').join('');
+ const rows=open.filter(c=>{const g=gaps(c);return ty?g.some(x=>x.k===ty):g.length>0;}).sort((a,b)=>gaps(b).length-gaps(a).length||sinceAction(b)-sinceAction(a));
+ const cols=[{h:'Case',r:c=>caseLink(c.id),s:c=>c.id},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Since last action',r:c=>sinceAction(c)+' days',s:c=>sinceAction(c)},
+  {h:'Time to deadline',r:c=>slaDays(c)<0?'<span class="up-bad">'+(-slaDays(c))+' days overdue</span>':slaDays(c)+' days left',s:c=>slaDays(c)},{h:'Detected gaps',r:c=>gaps(c).map(g=>badge(GAPL[g.k],g.k==='near'?'warn':'crit')).join(' ')},
+  {h:'Explanation',r:c=>'<span class="small">'+esc(gapSummary(c))+'</span>'},{h:'',r:c=>'<button class="btn btn-sm" onclick="App.openCase(\''+c.id+'\')">View Case</button>'}];
+ return pageHead('Action Gap Detector','Gaps are calculated from recorded dates and case history, not assigned manually')+
+  '<div class="tiles">'+tiles+'</div>'+card(ty?'Cases with gap: '+GAPT.find(t=>t[0]===ty)[1]:'All cases with detected action gaps',table('gaps',cols,rows,{ps:10,rowAttr:c=>'data-hl="gap-'+c.id+'"'}),ty?'<button class="btn btn-sm" onclick="App.setF(\'gap\',\'type\',\'\')">Show all</button>':'');
+};
+/* ---- Overlap detection ---- */
+const ovK={'Potential Match':'warn','Under Review':'info','Distinct Issues':'neutral','Related':'teal'};
+VIEWS.overlap=function(){
+ const f=ui.f.overlap,rows=S.overlaps.filter(o=>!f.status||o.review===f.status);
+ const cols=[{h:'Case A',r:o=>caseLink(o.a)},{h:'Case B',r:o=>caseLink(o.b)},{h:'Institution',r:o=>esc(INST[caseById(o.a).inst].short)},{h:'Shared category',r:o=>esc(caseById(o.a).cat)},{h:'Common department',r:o=>esc(Array.from(new Set([caseById(o.a).dept,caseById(o.b).dept])).join(' / '))},
+  {h:'Similarity (illustrative)',r:o=>'<div style="display:flex;gap:8px;align-items:center"><div class="bar" style="width:70px"><i style="width:'+o.sim+'%"></i></div>'+o.sim+'%</div>',s:o=>o.sim},{h:'Shared evidence',r:o=>'<span class="small">'+esc(o.ev)+'</span>'},{h:'Why flagged',r:o=>'<span class="small">'+esc(o.why)+(o.note?'<br><i>Outcome: '+esc(o.note)+'</i>':'')+'</span>'},
+  {h:'Review status',r:o=>badge(o.review,ovK[o.review]),s:o=>o.review},{h:'Actions',r:o=>'<div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-sm" onclick="App.reviewOv(\''+o.id+'\')">Review both</button><button class="btn btn-sm" onclick="App.quickOv(\''+o.id+'\',\'Related\')">Mark related</button><button class="btn btn-sm" onclick="App.quickOv(\''+o.id+'\',\'Distinct Issues\')">Dismiss</button></div>'}];
+ return pageHead('Overlap Detection','Potentially related or duplicate complaints flagged for human review')+
+  '<div class="note">Similarity values are illustrative demonstration scores, not validated AI predictions. Complaints are never merged automatically; every outcome requires an administrator’s decision and is written to the action history.</div>'+
+  '<section class="card"><div class="fbar">'+fld('Review status',selectH('o-st',['Potential Match','Under Review','Distinct Issues','Related'],f.status,"App.setF('overlap','status',this.value)",'All'))+'</div>'+table('ovl',cols,rows,{ps:10,rowAttr:o=>'data-hl="ov-'+o.id+'"'})+'</section>';
+};
+/* ---- Action history ---- */
+VIEWS.history=function(){
+ const f=ui.f.hist,q=f.q.trim().toLowerCase();
+ const rows=S.hist.filter(h=>{const c=caseById(h.caseId);return c&&(f.inst===''||c.inst===+f.inst)&&(!f.dept||h.dept===f.dept)&&(!f.type||h.action===f.type)&&(!q||h.caseId.toLowerCase().includes(q))&&(!f.from||h.ts.slice(0,10)>=f.from)&&(!f.to||h.ts.slice(0,10)<=f.to);}).sort((a,b)=>a.ts<b.ts?1:-1);
+ const types=Array.from(new Set(S.hist.map(h=>h.action))).sort();
+ const cols=[{h:'Timestamp',r:h=>fmtT(h.ts),s:h=>h.ts},{h:'Case ID',r:h=>caseLink(h.caseId),s:h=>h.caseId},{h:'Previous',r:h=>esc(h.prev)},{h:'New status',r:h=>esc(h.next)},{h:'Action performed',r:h=>esc(h.action),s:h=>h.action},{h:'Responsible officer',r:h=>esc(h.officer)},{h:'Department',r:h=>esc(h.dept)},{h:'Administrative note',r:h=>'<span class="small">'+esc(h.note)+'</span>'},{h:'Source',r:h=>h.sim?badge('Sample record','neutral'):badge('Recorded in demo','teal')}];
+ const bar='<div class="fbar">'+fld('Institution',selectH('h-in',instOpts(),f.inst,"App.setF('hist','inst',this.value)",'All'))+fld('Case ID','<input id="h-q" type="search" value="'+esc(f.q)+'" placeholder="CASE-2026-…" oninput="App.setF(\'hist\',\'q\',this.value)">')+fld('Department',selectH('h-dp',DEPTS,f.dept,"App.setF('hist','dept',this.value)",'All'))+fld('Action type',selectH('h-ty',types,f.type,"App.setF('hist','type',this.value)",'All'))+fld('From','<input id="h-f" type="date" value="'+esc(f.from)+'" onchange="App.setF(\'hist\',\'from\',this.value)">')+fld('To','<input id="h-t" type="date" value="'+esc(f.to)+'" onchange="App.setF(\'hist\',\'to\',this.value)">')+'<button class="btn" onclick="App.clearF(\'hist\')">Clear</button></div>';
+ return pageHead('Action History','Chronological, auditable record of case events')+'<div class="note">Entries labelled “Sample record” are generated demonstration history. Entries labelled “Recorded in demo” were created by actions performed in this browser session and saved locally.</div><section class="card">'+bar+table('hist',cols,rows,{ps:15})+'</section>';
+};
+/* ---- Blind-spot detector ---- */
+VIEWS.blind=function(){
+ const open=S.cases.filter(isOpen);const F=[];
+ const wording=S.overlaps.filter(o=>o.review==='Potential Match'||o.review==='Under Review');
+ F.push({t:'Repeated complaints with different wording',p:wording.length+' suggested pair(s) describe the same issue in different words.',rec:wording.map(o=>o.a.slice(10)+' / '+o.b.slice(10)),ids:wording.reduce((a,o)=>a.concat([o.a,o.b]),[]),why:'Different wording can hide a recurring problem from keyword-based counts.',lim:'Medium — based on illustrative similarity, not validated matching.',ver:'Reviewer reads both complaints and decides whether they share a root cause.'});
+ const cnt=INST.map((x,i)=>S.cases.filter(c=>c.inst===i&&diff(TODAY,c.recv)<90).length),sorted=cnt.slice().sort((a,b)=>a-b),med=(sorted[2]+sorted[3])/2,mi=cnt.indexOf(sorted[0]);
+ F.push({t:'Unusually low recorded complaint activity',p:INST[mi].name+' recorded '+cnt[mi]+' complaints in 90 days against a median of '+med+' across the six institutions.',rec:[],ids:[],why:'Low volume may reflect under-reporting or inaccessible channels — but may equally reflect a smaller student body or effective local resolution.',lim:'Low — volume alone is not evidence of misconduct or poor performance.',ver:'Compare with enrolment size and survey students on awareness of the complaint channel before drawing conclusions.'});
+ const cl=S.overlaps.map(o=>{const a=caseById(o.a),b=caseById(o.b);return !isOpen(a)&&isOpen(b)?[a,b]:!isOpen(b)&&isOpen(a)?[b,a]:null;}).filter(Boolean);
+ F.push({t:'Cases closed while related issues remain open',p:cl.length+' closed case(s) have a related complaint that is still open.',rec:cl.map(x=>x[0].id.slice(10)+' → '+x[1].id.slice(10)),ids:cl.reduce((a,x)=>a.concat([x[0].id,x[1].id]),[]),why:'A closure may have been recorded without resolving the underlying cause.',lim:'Medium — relationship comes from a suggested match, not a confirmed link.',ver:'Reopen review of the closed case and confirm whether the remedy was effective.'});
+ const dm={};open.forEach(c=>{if(gaps(c).some(g=>['stale','await','nofu'].includes(g.k)))dm[c.dept]=(dm[c.dept]||0)+1;});const dk=Object.keys(dm).sort((a,b)=>dm[b]-dm[a])[0];
+ F.push({t:'Departments with repeated missing updates',p:dk?dk+' has '+dm[dk]+' open case(s) with stale, unanswered or undocumented follow-up.':'No department stands out.',rec:[],ids:open.filter(c=>c.dept===dk&&gaps(c).some(g=>['stale','await','nofu'].includes(g.k))).slice(0,6).map(c=>c.id),why:'Repeated silence from one department can delay many unrelated complaints.',lim:'Medium — department workload and staffing are not captured in the register.',ver:'Ask the department head for its current backlog and staffing before escalating.'});
+ const re=S.cases.filter(c=>c.ret>=2);
+ F.push({t:'Complaints repeatedly returned or reopened',p:re.length+' case(s) were returned two or more times without resolution.',rec:[],ids:re.map(c=>c.id),why:'Repeated returns suggest unclear ownership or inadequate responses.',lim:'Medium — return reasons are recorded only as free-text notes.',ver:'Read the return notes and confirm who owns the final decision.'});
+ return pageHead('Complaint Blind-Spot Detector','Patterns that may not be visible through ordinary complaint tracking')+
+  '<div class="note warn">These findings are prompts for human review, not conclusions. A pattern is never treated as proof of misconduct, and low complaint volume is not treated as poor performance.</div>'+
+  F.map(x=>'<section class="card"><div class="ch"><h3>'+esc(x.t)+'</h3></div><div class="cb"><dl class="kv"><dt>Observed pattern</dt><dd>'+esc(x.p)+'</dd><dt>Relevant records</dt><dd>'+(Array.from(new Set(x.ids)).slice(0,10).map(caseLink).join(' · ')||(x.rec.length?esc(x.rec.join(', ')):'Aggregate pattern — no single record'))+'</dd><dt>Why it merits review</dt><dd>'+esc(x.why)+'</dd><dt>Confidence / limitation</dt><dd>'+esc(x.lim)+'</dd><dt>Suggested verification</dt><dd>'+esc(x.ver)+'</dd></dl></div></section>').join('');
+};
+/* ---- Complaint view ---- */
+VIEWS.twin=function(){
+ const c=caseById(ui.twin)||S.cases[0],tab=ui.twinTab,ev=caseEvidence(c),ds=caseDep(c),ov=caseOverlaps(c),p=pScore(c);
+ const tabs=[['summary','Summary'],['timeline','Timeline'],['deps','Dependencies'],['evidence','Evidence'],['gaps','Action gaps & risk'],['related','Related complaints']].map(t=>'<button class="tab '+(tab===t[0]?'on':'')+'" onclick="App.twinTab(\''+t[0]+'\')">'+t[1]+'</button>').join('');
+ const dec=[];
+ if(isOpen(c)){if(!c.officer)dec.push('Assign a responsible officer.');if(slaDays(c)<0)dec.push('Decide whether to extend the SLA with a recorded justification or escalate.');ds.filter(d=>d.status==='Pending').forEach(d=>dec.push('Decide on escalation to '+d.support.join(' / ')+' for: '+d.pending+'.'));ov.filter(o=>o.review==='Potential Match'||o.review==='Under Review').forEach(o=>dec.push('Review the potentially related case '+(o.a===c.id?o.b:o.a)+'.'));ev.filter(e=>e.status!=='Reviewed – Consistent').forEach(e=>dec.push('Complete review of evidence '+e.id+' ('+e.status+').'));}
+ let body='';
+ if(tab==='summary')body='<div class="g2e"><section class="card"><div class="ch"><h3>Case summary</h3></div><div class="cb"><dl class="kv"><dt>Case ID</dt><dd>'+esc(c.id)+'</dd><dt>Title</dt><dd>'+esc(c.title)+'</dd><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Departments involved</dt><dd>'+esc(Array.from(new Set([c.dept].concat(ds.reduce((a,d)=>a.concat(d.support),[])))).join(', '))+'</dd><dt>Status</dt><dd>'+statusBadge(c.status)+'</dd><dt>Priority</dt><dd>'+prioBadge(priority(c))+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Received / SLA</dt><dd>'+fmt(c.recv)+' / '+fmt(c.sla)+' '+slaBadge(c)+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+'</dd></dl></div></section><div>'+
+  card('Next required action','<div class="cb"><p style="margin:0"><b>'+esc(recAction(c))+'</b></p><p class="muted small">'+esc(pExplain(c))+'</p></div>','<button class="btn btn-p btn-sm" onclick="App.openCase(\''+c.id+'\')">Record action</button>')+
+  card('Pending decisions','<div class="cb">'+(dec.length?'<ul style="margin:0;padding-left:18px">'+dec.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul>':'<span class="muted">No pending decisions.</span>')+'</div>')+'</div></div>';
+ else if(tab==='timeline'){const h=caseHist(c);body=card('Timeline',' <div class="cb"><ul class="tl">'+h.map(x=>'<li class="'+(x.sim?'sim':'')+'"><div class="xs muted">'+fmtT(x.ts)+' · '+(x.sim?'Sample':'Recorded')+' · '+esc(x.officer)+'</div><b>'+esc(x.action)+'</b>'+(x.prev!==x.next?' ('+esc(x.prev)+' → '+esc(x.next)+')':'')+'<div class="small">'+esc(x.note)+'</div></li>').join('')+'</ul></div>');}
+ else if(tab==='deps')body=card('Department dependencies',ds.length?'<div class="cb">'+ds.map(d=>'<div style="margin-bottom:16px">'+depFlow(d)+'<p class="small muted">Waiting '+diff(d.resolvedOn||TODAY,d.since)+' days · Next step: '+esc(d.next)+'</p></div>').join('')+'</div>':'<div class="empty">No cross-department dependency recorded for this case.</div>');
+ else if(tab==='evidence')body=card('Evidence references',table('tev',[{h:'ID',r:e=>esc(e.id)},{h:'Type',r:e=>esc(e.type)},{h:'Submitted',r:e=>fmt(e.date)},{h:'Source',r:e=>esc(e.src)},{h:'Status',r:e=>badge(e.status,evK[e.status])}],ev,{nopager:true}));
+ else if(tab==='gaps'){const g=gaps(c);body='<div class="g2e">'+card('Action gaps','<div class="cb">'+(g.length?'<ul style="margin:0;padding-left:18px">'+g.map(x=>'<li>'+esc(x.t)+'</li>').join('')+'</ul>':'<span class="muted">No action gap detected.</span>')+'</div>')+card('Risk indicators (illustrative)','<div class="cb"><p style="margin:0 0 8px">Score <b>'+p.score+'</b> — '+prioBadge(priority(c))+'</p>'+Object.keys(p.contrib).map(k=>'<div style="display:flex;gap:8px;align-items:center;margin-bottom:5px"><span class="small" style="width:190px">'+FL[k]+'</span><div class="bar" style="flex:1"><i style="width:'+Math.round(p.f[k]*100)+'%"></i></div><span class="xs muted" style="width:40px">'+p.contrib[k].toFixed(1)+'</span></div>').join('')+'</div>')+'</div>';}
+ else{const sim=S.cases.filter(x=>x.id!==c.id&&x.inst===c.inst&&x.cat===c.cat&&isOpen(x)).slice(0,6);body=card('Related complaints','<div class="cb"><h4 style="font-size:13px;margin-bottom:6px">Suggested overlaps</h4>'+(ov.map(o=>'<p style="margin:0 0 6px">'+caseLink(o.a===c.id?o.b:o.a)+' '+badge(o.review,ovK[o.review])+' <span class="small muted">'+esc(o.why)+'</span></p>').join('')||'<span class="muted">None.</span>')+'<h4 style="font-size:13px;margin:14px 0 6px">Other open cases, same institution and category</h4>'+(sim.map(x=>'<p style="margin:0 0 4px">'+caseLink(x.id)+' <span class="small muted">'+esc(x.title)+'</span></p>').join('')||'<span class="muted">None.</span>')+'</div>');}
+ const opts=S.cases.slice().sort((a,b)=>(isOpen(b)-isOpen(a))||(a.id<b.id?-1:1)).map(x=>[x.id,x.id+' — '+trunc(x.title,48)]);
+ return pageHead('Complaint view','A structured administrative view of a single complaint',selectH('t-sel',opts,c.id,"App.setTwin(this.value)"))+'<div class="tabs">'+tabs+'</div><div data-hl="twin">'+body+'</div>';
+};
+const evK={'Awaiting Review':'neutral','Under Verification':'info','Reviewed – Consistent':'ok','Could Not Be Verified':'warn'};
+/* ---- Department dependencies ---- */
+function depFlow(d){
+ const c=caseById(d.caseId),pend=d.status==='Pending';
+ return '<div class="flow"><div class="fn">'+esc(d.primary)+'<small>Primary · owns '+esc(c.id)+'</small></div><span class="fa">→</span>'+d.support.map(s=>'<div class="fn '+(pend?'blocked':'done')+'">'+esc(s)+'<small>'+esc(d.pending)+'</small></div>').join('')+'<span class="fa">→</span><div class="fn '+(pend?'blocked':'done')+'">Resolution<small>'+(pend?'Blocked: '+esc(d.blocking):'Unblocked ('+esc(d.status)+')')+'</small></div></div>';
+}
+VIEWS.deps=function(){
+ const sel=S.deps.find(d=>d.id===ui.depSel)||S.deps[0];
+ const cols=[{h:'Case',r:d=>caseLink(d.caseId),s:d=>d.caseId},{h:'Primary department',r:d=>esc(d.primary),s:d=>d.primary},{h:'Supporting',r:d=>esc(d.support.join(', '))},{h:'Pending dependency',r:d=>esc(d.pending)},{h:'Days waiting',r:d=>diff(d.resolvedOn||TODAY,d.since),s:d=>diff(d.resolvedOn||TODAY,d.since)},{h:'Blocking action',r:d=>esc(d.blocking)},{h:'Next recommended step',r:d=>'<span class="small">'+esc(d.next)+'</span>'},{h:'Status',r:d=>badge(d.status,d.status==='Pending'?'crit':d.status==='Escalated'?'warn':'ok')},{h:'',r:d=>'<div style="display:flex;gap:4px"><button class="btn btn-sm" onclick="App.pickDep(\''+d.id+'\')">Show flow</button><button class="btn btn-sm" onclick="App.depUpdate(\''+d.id+'\')">Record update</button></div>'}];
+ return pageHead('Department Coordination','Cross-department dependencies that can delay complaint resolution')+
+  card('Workflow — '+sel.caseId,'<div class="cb" data-hl="depflow">'+depFlow(sel)+'<p class="small muted" style="margin:12px 0 0">'+(sel.status==='Pending'?'One delayed response ('+esc(sel.support.join(' / '))+', waiting '+diff(TODAY,sel.since)+' days) is blocking the primary department from completing: '+esc(sel.blocking)+'.':'The dependency is no longer blocking.')+'</p></div>')+
+  card('Dependency register',table('deps',cols,S.deps,{ps:10,rowAttr:d=>'data-hl="dep-'+d.id+'"'}));
+};
+/* ---- Evidence provenance ---- */
+VIEWS.evidence=function(){
+ const f=ui.f.evid,rows=S.evidence.filter(e=>!f.status||e.status===f.status);
+ const cols=[{h:'Evidence ID',r:e=>'<b>'+esc(e.id)+'</b>',s:e=>e.id},{h:'Case',r:e=>caseLink(e.caseId),s:e=>e.caseId},{h:'Type',r:e=>esc(e.type),s:e=>e.type},{h:'Submitted',r:e=>fmt(e.date),s:e=>e.date},{h:'Submitted by',r:e=>esc(e.by)},{h:'Source description',r:e=>'<span class="small">'+esc(e.src)+(e.file?'<br><i>Local reference: '+esc(e.file)+'</i>':'')+'</span>'},{h:'Verification',r:e=>badge(e.status,evK[e.status]),s:e=>e.status},{h:'Related action',r:e=>'<span class="small">'+esc(e.action||'—')+'</span>'},
+  {h:'Record history',r:e=>'<details><summary class="small">'+e.hist.length+' entr'+(e.hist.length===1?'y':'ies')+'</summary><ul class="small" style="margin:6px 0 0;padding-left:16px">'+e.hist.map(h=>'<li>'+fmt(h.d)+' — '+esc(h.t)+'</li>').join('')+'</ul></details>'},{h:'',r:e=>'<div style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-sm" onclick="App.evUpdate(\''+e.id+'\')">Update status</button><button class="btn btn-sm" onclick="App.openCase(\''+e.caseId+'\')">View case</button></div>'}];
+ return pageHead('Evidence Provenance Tracker','Evidence references and review status for each case','<button class="btn btn-p" onclick="App.evNew()">Register evidence reference</button>')+
+  '<div class="note">Evidence entries are demonstration references stored only in this browser. This is not a secure evidence repository: files are not uploaded, hashed, signed or stored immutably, and “reviewed” status does not certify authenticity.</div>'+
+  '<section class="card"><div class="fbar">'+fld('Verification status',selectH('e-st',Object.keys(evK),f.status,"App.setF('evid','status',this.value)",'All'))+'</div>'+table('evt',cols,rows,{ps:10,rowAttr:e=>'data-hl="ev-'+e.id+'"'})+'</section>';
+};
+/* ---- Explainable priority engine ---- */
+VIEWS.priority=function(){
+ const w=S.weights,open=S.cases.filter(isOpen).sort((a,b)=>pScore(b).score-pScore(a).score);
+ const cnt=l=>open.filter(c=>priority(c)===l).length;
+ const sliders=Object.keys(w).map(k=>'<div style="display:grid;grid-template-columns:1fr 50px;gap:6px;align-items:center;margin-bottom:8px"><label for="w-'+k+'" class="small">'+FL[k]+'</label><b id="wv-'+k+'" class="right">'+w[k]+'</b><input id="w-'+k+'" type="range" min="0" max="40" value="'+w[k]+'" style="grid-column:1/3" oninput="document.getElementById(\'wv-'+k+'\').textContent=this.value" onchange="App.setW(\''+k+'\',this.value)"></div>').join('');
+ const colors=[C.navy,C.red,C.amber,C.steel,C.teal,C.blue,C.light],keys=Object.keys(w);
+ const cols=[{h:'Case',r:c=>caseLink(c.id),s:c=>c.id},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score},{h:'Score',r:c=>pScore(c).score,s:c=>pScore(c).score},{h:'Contributing factors',r:c=>{const p=pScore(c);return '<div class="stack" title="'+esc(keys.map(k=>FL[k]+': '+p.contrib[k].toFixed(1)).join('; '))+'">'+keys.map((k,i)=>'<i style="width:'+p.contrib[k]+'%;background:'+colors[i]+'"></i>').join('')+'</div>';}},{h:'Explanation',r:c=>'<span class="small">'+esc(pExplain(c))+'</span>'},{h:'Suggested next action',r:c=>'<span class="small">'+esc(recAction(c))+'</span>'}];
+ return pageHead('Explainable Priority Engine','Deterministic, adjustable rules — no machine-learning model is used')+
+  '<div class="note warn">Scores, weights and recommendations are illustrative demonstration logic. Each case’s score is a weighted sum of the seven factors below; change a weight to see the ranking respond.</div>'+
+  '<div class="g2"><section class="card"><div class="ch"><h3>Open cases by assigned priority</h3></div><div class="cb"><div class="tiles" style="margin:0"><div class="tile" style="cursor:default"><b>'+cnt('Critical')+'</b><span>Critical (score ≥ 66)</span></div><div class="tile" style="cursor:default"><b>'+cnt('High')+'</b><span>High (45–65)</span></div><div class="tile" style="cursor:default"><b>'+cnt('Medium')+'</b><span>Medium (28–44)</span></div><div class="tile" style="cursor:default"><b>'+cnt('Low')+'</b><span>Low (&lt; 28)</span></div></div>'+
+  '<div class="lg" style="margin-top:12px">'+keys.map((k,i)=>'<span><i style="background:'+colors[i]+'"></i>'+FL[k]+'</span>').join('')+'</div></div></section>'+
+  card('Rule weights','<div class="cb">'+sliders+'<button class="btn btn-sm" onclick="App.resetW()">Reset default weights</button></div>')+'</div>'+
+  card('Case prioritisation',table('prio',cols,open,{ps:10}));
+};
+/* ---- Search and filters ---- */
+VIEWS.search=function(){
+ const f=ui.f.search,rows=filterCases(ui.applied.search),states=Array.from(new Set(INST.map(x=>x.state)));
+ const kd=e=>"onkeydown=\"if(event.key==='Enter')App.applySearch()\"";
+ const bar='<div class="fbar" style="align-items:flex-end">'+fld('Search all fields','<input id="s-q" type="search" value="'+esc(f.q)+'" placeholder="ID, title, institution, officer, evidence…" style="min-width:260px" oninput="App.stage(\'q\',this.value)" '+kd()+'>')+fld('Institution',selectH('s-in',instOpts(),f.inst,"App.stage('inst',this.value)",'All'))+fld('State',selectH('s-sa',states,f.state,"App.stage('state',this.value)",'All'))+fld('Department',selectH('s-dp',DEPTS,f.dept,"App.stage('dept',this.value)",'All'))+fld('Status',selectH('s-st',STATUSES,f.status,"App.stage('status',this.value)",'All'))+fld('Priority',selectH('s-pr',['Critical','High','Medium','Low'],f.prio,"App.stage('prio',this.value)",'All'))+fld('SLA condition',selectH('s-sl',['Within SLA','Due ≤ 7 days','Breached','Completed'],f.sla,"App.stage('sla',this.value)",'All'))+fld('Category',selectH('s-ca',CATS,f.cat,"App.stage('cat',this.value)",'All'))+fld('Received from','<input id="s-f" type="date" value="'+esc(f.from)+'" onchange="App.stage(\'from\',this.value)">')+fld('Received to','<input id="s-t" type="date" value="'+esc(f.to)+'" onchange="App.stage(\'to\',this.value)">')+'<button class="btn btn-p" onclick="App.applySearch()">Apply Filters</button><button class="btn" onclick="App.clearSearch()">Clear Filters</button></div>';
+ return pageHead('Search & Filters','Global search with advanced filters over the complaint register')+'<section class="card">'+bar+'<div class="pager" style="border-bottom:1px solid var(--bd)"><b style="color:var(--navy)">'+rows.length+' result(s)</b><span><button class="btn btn-sm" onclick="App.exportRows(\'search\')">Export results (CSV)</button></span></div>'+table('search',caseCols(),rows,{ps:12})+'</section>';
+};
+/* ---- Alerts ---- */
+VIEWS.alerts=function(){
+ const f=ui.f.alerts,all=allAlerts(),rows=all.filter(a=>(!f.sev||a.sev===f.sev)&&(!f.unread||!S.read[a.id]));
+ const unread=all.filter(a=>!S.read[a.id]).length;
+ const list=rows.slice(0,40).map(a=>'<div class="alert '+({Critical:'crit',High:'high',Medium:'med',Low:'low'}[a.sev])+(S.read[a.id]?' read':'')+'"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div>'+badge(a.sev,sevK[a.sev])+' <b>'+esc(a.type)+'</b></div><span class="xs muted">'+fmt(a.date)+(S.read[a.id]?' · read':'')+'</span></div><p style="margin:6px 0 3px">'+esc(a.text)+'</p><p class="small muted" style="margin:0 0 8px">Recommended next step: '+esc(a.rec)+'</p><div style="display:flex;gap:6px">'+(a.cs?'<button class="btn btn-sm" onclick="App.openCase(\''+a.cs+'\')">Open case '+esc(a.cs)+'</button>':'')+(a.inst!=null?'<button class="btn btn-sm" onclick="App.goRisk('+a.inst+')">Open risk signals</button>':'')+'<button class="btn btn-sm" onclick="App.markRead(\''+a.id+'\')">'+(S.read[a.id]?'Mark unread':'Mark as read')+'</button></div></div>').join('');
+ return pageHead('Alerts & Notifications',all.length+' alert(s) derived from current case, evidence and risk records · '+unread+' unread','<button class="btn" onclick="App.readAll()">Mark all as read</button>')+
+  '<section class="card"><div class="fbar">'+fld('Severity',selectH('a-sv',['Critical','High','Medium','Low'],f.sev,"App.setF('alerts','sev',this.value)",'All severities'))+'<label style="display:flex;gap:6px;align-items:center;font-size:12.5px"><input id="a-un" type="checkbox" '+(f.unread?'checked':'')+' onchange="App.setF(\'alerts\',\'unread\',this.checked)"> Unread only</label></div><div class="cb">'+(list||'<div class="empty">No alerts match the filter.</div>')+(rows.length>40?'<p class="muted small">Showing the 40 most severe of '+rows.length+' alerts.</p>':'')+'</div></section>';
+};
+/* ---- Reports & analytics ---- */
+VIEWS.reports=function(){
+ const f=ui.f.rep,win=f.range==='all'?null:+f.range;
+ const cs=S.cases.filter(c=>(f.inst===''||c.inst===+f.inst)&&(!win||diff(TODAY,c.recv)<win));
+ const from=win?ago(win-1):cs.reduce((m,c)=>c.recv<m?c.recv:m,TODAY);
+ const me=monthEnds();
+ const brk=[['Not breached',c=>slaDays(c)>=0],['1–7 days',c=>slaDays(c)<0&&slaDays(c)>=-7],['8–14 days',c=>slaDays(c)<-7&&slaDays(c)>=-14],['15–30 days',c=>slaDays(c)<-14&&slaDays(c)>=-30],['30+ days',c=>slaDays(c)<-30]];
+ const openCs=cs.filter(isOpen);
+ const gapC=GAPT.map(t=>[t[1],openCs.filter(c=>gaps(c).some(g=>g.k===t[0])).length]);
+ const used=INST.map((x,i)=>i).filter(i=>f.inst===''||i===+f.inst);
+ ui.post.push(()=>{
+  chart('rc-vol',{type:'bar',data:{labels:me.map(m=>m.l),datasets:[{label:'Complaints received',data:me.map(m=>cs.filter(c=>c.recv.slice(0,7)===m.d.slice(0,7)).length),backgroundColor:C.blue}]},options:bopts({legend:false,vt:'Complaints',ct:'Month'})});
+  chart('rc-res',{type:'bar',data:{labels:used.map(i=>INST[i].short),datasets:[{label:'Resolution rate (%)',data:used.map(i=>{const z=cs.filter(c=>c.inst===i);return pct(z.filter(c=>!isOpen(c)).length,z.length);}),backgroundColor:C.teal}]},options:Object.assign(bopts({h:true,legend:false,vt:'Resolved or closed (%)'}),{})});
+  chart('rc-comp',{type:'bar',data:{labels:DEPTS.map(d=>trunc(d,18)),datasets:[{label:'Compliance (%)',data:DEPTS.map(d=>{const z=cs.filter(c=>c.dept===d);return z.length?compliance(z):0;}),backgroundColor:C.steel}]},options:bopts({legend:false,vt:'SLA compliance (%)',rot:45})});
+  chart('rc-brk',{type:'doughnut',data:{labels:brk.map(b=>b[0]),datasets:[{data:brk.map(b=>openCs.filter(b[1]).length),backgroundColor:[C.green,C.amber,'#B0793A',C.red,'#7C2F2F'],borderColor:C.ring,borderWidth:2}]},options:Object.assign(bopts({noScale:true}),{cutout:'55%'})});
+  chart('rc-avg',{type:'bar',data:{labels:used.map(i=>INST[i].short),datasets:[{label:'Average days to resolution',data:used.map(i=>avgResolution(cs.filter(c=>c.inst===i))||0),backgroundColor:C.navy}]},options:bopts({legend:false,vt:'Days'})});
+  chart('rc-cat',{type:'bar',data:{labels:CATS,datasets:[{label:'Complaints',data:CATS.map(k=>cs.filter(c=>c.cat===k).length),backgroundColor:C.amber}]},options:bopts({h:true,legend:false,vt:'Complaints'})});
+  chart('rc-gap',{type:'bar',data:{labels:gapC.map(g=>g[0]),datasets:[{label:'Open cases',data:gapC.map(g=>g[1]),backgroundColor:C.red}]},options:bopts({h:true,legend:false,vt:'Open cases with the gap'})});
+  chart('rc-risk',{type:'line',data:{labels:me.map(m=>m.l),datasets:[{label:'Cases past SLA at month-end',data:me.map(m=>cs.filter(c=>overdueAt(c,m.d)).length),borderColor:C.red,backgroundColor:C.red,tension:.2,borderWidth:2}]},options:bopts({vt:'Cases',ct:'Month'})});
+ });
+ const cmp=table('rcmp',[{h:'Institution',r:x=>esc(x.n),s:x=>x.n},{h:'Complaints',r:x=>x.t,s:x=>x.t},{h:'Open',r:x=>x.o,s:x=>x.o},{h:'Resolution rate',r:x=>x.r+'%',s:x=>x.r},{h:'SLA compliance',r:x=>x.c+'%',s:x=>x.c},{h:'Avg resolution (days)',r:x=>x.a==null?'—':x.a,s:x=>x.a==null?-1:x.a},{h:'Risk (illustrative)',r:x=>badge(x.k,lvlK[x.k])}],
+  used.map(i=>{const z=cs.filter(c=>c.inst===i);return {n:INST[i].name,t:z.length,o:z.filter(isOpen).length,r:pct(z.filter(c=>!isOpen(c)).length,z.length),c:compliance(z),a:avgResolution(z),k:riskOf(i).level};}),{nopager:true});
+ const cv=id=>'<div class="cb"><div class="chbox" style="height:230px"><canvas id="'+id+'"></canvas></div></div>';
+ return '<div class="print-only"><h2 style="font-size:20px">Institutional Governance &amp; Complaint Monitoring — Administrative Report</h2><div class="small">Reporting period: '+fmt(from)+' to '+fmt(TODAY)+' · Institution: '+(f.inst===''?'All institutions':esc(INST[+f.inst].name))+' · '+cs.length+' complaints · DEMONSTRATION DATA (fictional)</div></div>'+
+  pageHead('Reports & Analytics','Reporting period: '+fmt(from)+' – '+fmt(TODAY)+' · '+cs.length+' complaint(s)',fld('Period',selectH('rp-r',[['30','Last 30 days'],['90','Last 90 days'],['180','Last 180 days'],['all','All records']],f.range,"App.setF('rep','range',this.value)"))+fld('Institution',selectH('rp-i',instOpts(),f.inst,"App.setF('rep','inst',this.value)",'All institutions'))+'<span data-hl="export" style="display:inline-flex;gap:8px"><button class="btn" onclick="App.exportAll()">Export all records (CSV)</button><button class="btn btn-p" onclick="App.exportRows(\'rep\')">Export filtered report (CSV)</button></span><button class="btn" onclick="window.print()">Print report</button>')+
+  '<div class="g2e">'+card('Complaint volume by month',cv('rc-vol'))+card('Resolution rate by institution',cv('rc-res'))+'</div>'+
+  '<div class="g2e">'+card('Department response compliance',cv('rc-comp'))+card('SLA breach distribution (open cases, days past deadline)',cv('rc-brk'))+'</div>'+
+  '<div class="g2e">'+card('Average resolution time',cv('rc-avg'))+card('Recurring complaint categories',cv('rc-cat'))+'</div>'+
+  '<div class="g2e">'+card('Action-gap analysis',cv('rc-gap'))+card('Risk trend (cases past SLA at month-end)',cv('rc-risk'))+'</div>'+
+  card('Institution-wise comparison',cmp);
+};
+
+/* =====================================================================
+   7. CASE DRAWER AND MODAL FORMS
+   ===================================================================== */
+function openCase(id){
+ const c=caseById(id);if(!c)return;
+ const g=gaps(c),h=caseHist(c).slice(-6).reverse(),ds=caseDep(c);
+ const offs=INST[c.inst].officers.map(o=>[o,o]);
+ $('#drawer').innerHTML='<div class="dh"><div><h3>'+esc(c.id)+'</h3><div style="margin-top:6px">'+statusBadge(c.status)+' '+prioBadge(priority(c))+' '+slaBadge(c)+'</div></div><button class="btn btn-sm" onclick="App.closeAll()">Close</button></div><div class="db">'+
+  '<h4>Summary</h4><p style="margin:0 0 8px"><b>'+esc(c.title)+'</b></p><dl class="kv"><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Department</dt><dd>'+esc(c.dept)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Received</dt><dd>'+fmt(c.recv)+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+(isOpen(c)?' ('+sinceAction(c)+' days ago)':'')+'</dd><dt>Next action due</dt><dd>'+fmt(c.next)+'</dd><dt>SLA deadline</dt><dd>'+fmt(c.sla)+'</dd></dl>'+
+  '<h4>Action-gap findings</h4>'+(isOpen(c)?'<p class="small" style="margin:0 0 6px">'+esc(gapSummary(c))+'</p>'+(g.length?'<ul class="small" style="margin:0;padding-left:18px">'+g.map(x=>'<li>'+esc(x.t)+'</li>').join('')+'</ul>':''):'<span class="muted">Case is closed.</span>')+
+  '<h4>Priority explanation (illustrative)</h4><p class="small" style="margin:0">'+esc(pExplain(c))+'</p><p class="small muted" style="margin:4px 0 0">Suggested action: '+esc(recAction(c))+'</p>'+
+  (ds.length?'<h4>Department dependency</h4>'+ds.map(d=>'<p class="small" style="margin:0 0 4px">'+esc(d.primary)+' waiting on '+esc(d.support.join(', '))+' — '+esc(d.pending)+' ('+diff(d.resolvedOn||TODAY,d.since)+' days, '+esc(d.status)+')</p>').join(''):'')+
+  '<h4>Recent history</h4><ul class="tl small">'+h.map(x=>'<li class="'+(x.sim?'sim':'')+'"><span class="xs muted">'+fmtT(x.ts)+' · '+(x.sim?'sample':'recorded')+'</span><br><b>'+esc(x.action)+'</b> — '+esc(x.note)+'</li>').join('')+'</ul>'+
+  '<h4>Record an action</h4><div class="fg"><label class="fld">Action type'+selectH('cf-type',ACTIONS,'Follow-up recorded','')+'</label><label class="fld">Update status'+selectH('cf-status',STATUSES,c.status,'')+'</label><label class="fld">Assign department'+selectH('cf-dept',DEPTS,c.dept,'')+'</label><label class="fld">Assign officer'+selectH('cf-officer',offs,c.officer,'','— '+(c.officer?'keep '+c.officer:'unassigned')+' —')+'</label><label class="fld">Next action due'+'<input id="cf-next" type="date" value="'+esc(isOpen(c)?(c.next&&c.next>=TODAY?c.next:addD(TODAY,7)):'')+'"></label></div><label class="fld" style="margin-top:10px">Administrative note<textarea id="cf-note" placeholder="Describe the action taken or decision made"></textarea></label>'+
+  '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-p" onclick="App.saveAction(\''+c.id+'\')">Save action</button><button class="btn" onclick="App.goTwin(\''+c.id+'\')">Open Complaint view</button></div></div>';
+ $('#drawer').classList.add('on');$('#modal').classList.remove('on');openOv();
+}
+function saveAction(id){
+ const c=caseById(id),type=$('#cf-type').value,ns=$('#cf-status').value,dept=$('#cf-dept').value,off=$('#cf-officer').value,nx=$('#cf-next').value,note=$('#cf-note').value.trim();
+ if(!note){toast('Enter an administrative note to record this action.','warn');return;}
+ const prev=c.status,bits=[];
+ if(ns!==c.status){c.status=ns;bits.push('Status set to '+ns);}
+ if(dept!==c.dept){bits.push('Department reassigned from '+c.dept+' to '+dept);c.dept=dept;}
+ if(off&&off!==c.officer){bits.push('Officer assigned: '+off);c.officer=off;}
+ c.last=TODAY;c.fu=true;c.next=isOpen(c)?(nx||addD(TODAY,7)):null;
+ addHist(c,prev,type,(bits.length?bits.join('; ')+'. ':'')+note);
+ save();closeAll();render();toast('Action recorded for '+id+'. History updated.');openCase(id);
+}
+function reviewOv(id){
+ const o=S.overlaps.find(x=>x.id===id),a=caseById(o.a),b=caseById(o.b);
+ const box=c=>'<div class="card" style="margin:0"><div class="cb"><b>'+esc(c.id)+'</b><p class="small" style="margin:4px 0">'+esc(c.title)+'</p><p class="xs muted" style="margin:0">'+esc(c.dept)+' · '+esc(c.status)+' · received '+fmt(c.recv)+'</p></div></div>';
+ modal('Review suggested overlap '+o.id,'<div class="g2e">'+box(a)+box(b)+'</div><p class="small"><b>Why flagged:</b> '+esc(o.why)+'<br><b>Shared evidence:</b> '+esc(o.ev)+'<br><span class="muted">Illustrative similarity '+o.sim+'%. Cases are never merged automatically.</span></p><div class="fg"><label class="fld">Review outcome'+selectH('ov-out',[['Related','Mark as related'],['Distinct Issues','Dismiss — distinct issues'],['Under Review','Keep under review']],o.review==='Potential Match'?'Related':o.review,'')+'</label></div><label class="fld" style="margin-top:10px">Review note<textarea id="ov-note" placeholder="Record the reasoning for this outcome"></textarea></label>','<button class="btn" onclick="App.closeAll()">Cancel</button><button class="btn btn-p" onclick="App.saveOv(\''+id+'\')">Record outcome</button>');
+}
+function applyOv(id,out,note){
+ const o=S.overlaps.find(x=>x.id===id);o.review=out;o.note=note;
+ [o.a,o.b].forEach(cid=>{const c=caseById(cid);addHist(c,c.status,'Overlap review: '+out,'Review of '+o.a+' and '+o.b+'. '+note);});
+ save();closeAll();render();toast('Overlap '+id+' recorded as: '+out);
+}
+function evUpdate(id){
+ const e=S.evidence.find(x=>x.id===id);
+ modal('Update verification status — '+id,'<p class="small muted">Status is an administrative review marker only. It does not certify the authenticity of the document.</p><div class="fg"><label class="fld">Verification status'+selectH('ev-st',Object.keys(evK),e.status,'')+'</label><label class="fld">Related action<input id="ev-act" type="text" value="'+esc(e.action)+'" placeholder="e.g. Requested original from department"></label></div><label class="fld" style="margin-top:10px">Note<textarea id="ev-note"></textarea></label>','<button class="btn" onclick="App.closeAll()">Cancel</button><button class="btn btn-p" onclick="App.saveEv(\''+id+'\')">Save</button>');
+}
+function evNew(){
+ modal('Register evidence reference','<div class="note">Demonstration only: this stores a reference in your browser. No file is uploaded, and this is not a secure evidence repository.</div><div class="fg"><label class="fld">Case'+selectH('en-case',S.cases.map(c=>[c.id,c.id+' — '+trunc(c.title,40)]),S.cases[0].id,'')+'</label><label class="fld">Evidence type'+selectH('en-type',['Document','Administrative letter','Photograph','Correspondence reference','Email reference'],'Document','')+'</label><label class="fld">Submitted by<input id="en-by" type="text" placeholder="Name or role"></label><label class="fld">File (optional, name only)<input id="en-file" type="file"></label></div><label class="fld" style="margin-top:10px">Source description<textarea id="en-src" placeholder="What the evidence is and where it came from"></textarea></label>','<button class="btn" onclick="App.closeAll()">Cancel</button><button class="btn btn-p" onclick="App.saveEvNew()">Register reference</button>');
+}
+function depUpdate(id){
+ const d=S.deps.find(x=>x.id===id);
+ modal('Record dependency update — '+id,'<p class="small">'+esc(d.pending)+' · waiting since '+fmt(d.since)+'</p><div class="fg"><label class="fld">Dependency status'+selectH('dp-st',['Pending','Escalated','Response Received'],d.status,'')+'</label></div><label class="fld" style="margin-top:10px">Update note<textarea id="dp-note" placeholder="e.g. Accounts confirmed fund release on 28 Oct"></textarea></label>','<button class="btn" onclick="App.closeAll()">Cancel</button><button class="btn btn-p" onclick="App.saveDep(\''+id+'\')">Save update</button>');
+}
+function settingsModal(){modal('Settings','<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="st-compact" '+(S.settings.compact?'checked':'')+' onchange="App.setCompact(this.checked)"> Compact table density</label><p class="small muted">Reference date for all calculations: '+fmt(TODAY)+' (fixed for the demonstration).</p>','<button class="btn btn-p" onclick="App.closeAll()">Close</button>');}
+
+/* =====================================================================
+   8. GUIDED LIVE DEMO
+   ===================================================================== */
+const DEMO=[
+ {v:'dash',t:'Open the institutional overview',x:'The dashboard summarises complaints, SLA status and emerging issues. Every figure is computed from the same demonstration register used in the other views.',hl:'[data-hl="kpis"]',pre:()=>{ui.f.dash={inst:'',range:'90'};}},
+ {v:'cases',t:'Select an overdue complaint',x:'CASE-2026-0142 (scholarship disbursement) is filtered in the register. Its SLA deadline has passed — open it to see the full detail panel.',hl:'[data-hl="row-CASE-2026-0142"]',pre:()=>{ui.f.cases={q:'CASE-2026-0142',status:'',inst:'',dept:'',prio:''};ui.tbl.cases=null;}},
+ {v:'gaps',t:'Identify its action gap',x:'The detector calculates gaps from dates and history: 12 days without action, a missed next-action date and an overdue departmental response.',hl:'[data-hl="gap-CASE-2026-0142"]',pre:()=>{ui.f.gap.type='';ui.tbl.gaps=null;}},
+ {v:'overlap',t:'Inspect a potential overlapping complaint',x:'CASE-2026-0142 is flagged against CASE-2026-0138. Use “Review both” to record an outcome — cases are never merged automatically.',hl:'[data-hl="ov-OV-01"]',pre:()=>{ui.f.overlap.status='';ui.tbl.ovl=null;}},
+ {v:'deps',t:'Follow a department dependency',x:'Accounts cannot release funds until Student Affairs supplies the verified beneficiary list — one delayed response is blocking resolution.',hl:'[data-hl="depflow"]',pre:()=>{ui.depSel='DEP-01';}},
+ {v:'evidence',t:'Inspect evidence provenance',x:'E-0101 is a reference to an administrative letter. The status is a review marker only; this is not a secure evidence repository.',hl:'[data-hl="ev-E-0101"]',pre:()=>{ui.f.evid.status='';ui.tbl.evt=null;}},
+ {v:'risk',t:'View the institution’s risk indicators',x:'Each indicator for Coastal Institute of Technology lists the evidence behind it. The score is illustrative, not an official rating.',hl:'.card',pre:()=>{syncInst(0);}},
+ {v:'twin',t:'Examine the complaint view',x:'Everything known about CASE-2026-0142 in one structured view: summary, timeline, dependencies, evidence, gaps and related complaints.',hl:'[data-hl="twin"]',pre:()=>{ui.twin='CASE-2026-0142';ui.twinTab='summary';}},
+ {v:'reports',t:'Generate a filtered report',x:'The report is filtered to Coastal IT. “Export filtered report” downloads exactly the filtered records; “Print report” produces a clean printable version.',hl:'[data-hl="export"]',pre:()=>{ui.f.rep={inst:'0',range:'180'};}}
+];
+function demoPanel(){
+ const d=ui.demo,p=$('#demo');
+ if(!d.on){p.classList.remove('on');document.body.classList.remove('demo-on');return;}
+ const s=DEMO[d.step];
+ p.innerHTML='<div class="xs muted">ASSIST · STEP '+(d.step+1)+' OF '+DEMO.length+'</div><h4>'+esc(s.t)+'</h4><p>'+esc(s.x)+'</p><div class="bar" style="margin-bottom:12px"><i style="width:'+((d.step+1)/DEMO.length*100)+'%"></i></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm" '+(d.step===0?'disabled':'')+' onclick="App.demoGo('+(d.step-1)+')">Previous</button><button class="btn btn-sm btn-p" onclick="App.demoGo('+(d.step+1)+')">'+(d.step===DEMO.length-1?'Finish':'Next')+'</button><button class="btn btn-sm" onclick="App.demoReset()">Reset</button><button class="btn btn-sm btn-d" onclick="App.demoExit()">Close Assist</button></div>';
+ p.classList.add('on');document.body.classList.add('demo-on');
+}
+function demoGo(n){
+ if(n<0)return;if(n>=DEMO.length){demoExit();toast('Assist walkthrough complete.');return;}
+ ui.demo.on=true;ui.demo.step=n;const s=DEMO[n];if(s.pre)s.pre();go(s.v);
+}
+function demoExit(){ui.demo.on=false;demoPanel();render();}
+function demoReset(){resetData(true);demoGo(0);toast('Demonstration data reset.');}
+function demoHighlight(){
+ document.querySelectorAll('.demo-hl').forEach(e=>e.classList.remove('demo-hl'));
+ if(!ui.demo.on)return;const el=document.querySelector(DEMO[ui.demo.step].hl);
+ if(el){el.classList.add('demo-hl');setTimeout(()=>{try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}},60);}
+}
+
+/* =====================================================================
+   9. ROUTER, RENDER, EVENT HANDLERS
+   ===================================================================== */
+function render(){
+ destroyCharts();ui.post=[];
+ const a=document.activeElement;let fid=null,sel=null;
+ if(a&&a.id&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!a.closest('#drawer')&&!a.closest('#modal')){fid=a.id;try{sel=[a.selectionStart,a.selectionEnd];}catch(e){}}
+ const scr=window.scrollY;
+ $('#content').innerHTML=VIEWS[ui.view]();
+ ui.post.forEach(fn=>fn());
+ document.querySelectorAll('.nit').forEach(b=>b.classList.toggle('on',b.dataset.v===ui.view));
+ document.body.classList.toggle('compact',!!S.settings.compact);
+ const un=allAlerts().filter(x=>!S.read[x.id]).length;$('#bellCnt').textContent=un>99?'99+':un;$('#bellCnt').style.display=un?'':'none';
+ document.title=NAV.reduce((t,g)=>t||(g[1].find(i=>i[0]===ui.view)||[])[1],'')+' — Governance & Complaint Monitoring (Demo)';
+ if(fid){const el=document.getElementById(fid);if(el){el.focus();try{if(sel&&sel[0]!=null)el.setSelectionRange(sel[0],sel[1]);}catch(e){}}}
+ window.scrollTo(0,scr);
+ demoPanel();demoHighlight();
+}
+function go(v){closeAll();ui.view=v;document.body.classList.remove('nav-open');render();window.scrollTo(0,0);}
+function resetData(silent){try{localStorage.removeItem(KEY);}catch(e){}S=seed();ui.live.feed=null;ui.live.newCount=0;ui.tbl={};ui.applied.search={};ui.f.search={q:'',inst:'',state:'',dept:'',status:'',prio:'',sla:'',from:'',to:'',cat:''};ui.f.cases={q:'',status:'',inst:'',dept:'',prio:''};save();closeAll();if(!silent){render();toast('Demonstration data reset to the original records.');}}
+const App={
+ closeAll:closeAll,openCase:openCase,saveAction:saveAction,reviewOv:reviewOv,evUpdate:evUpdate,evNew:evNew,depUpdate:depUpdate,
+ demoGo:demoGo,demoExit:demoExit,demoReset:demoReset,
+ srt(id,i){const t=ui.tbl[id];if(t.sort===i)t.dir*=-1;else{t.sort=i;t.dir=1;}render();},
+ pg(id,p){ui.tbl[id].page=p;render();},
+ setF(sc,k,v){ui.f[sc][k]=v;if(k==='inst'&&(sc==='dash'||sc==='risk'))syncInst(v);Object.keys(ui.tbl).forEach(t=>{if(ui.tbl[t])ui.tbl[t].page=1;});render();},
+ clearF(sc){const o=ui.f[sc];Object.keys(o).forEach(k=>o[k]='');render();},
+ setInst(v){syncInst(v);render();},goRisk(i){syncInst(i);go('risk');},go:go,toggleTheme(){applyTheme(ui.theme==='dark'?'light':'dark');render();},
+ pickInst(i){syncInst(ui.f.dash.inst===String(i)?'':i);render();},
+ setMap(k,v){if(k==='inst')syncInst(v);else ui.f.map[k]=v;render();},mapPick(k){ui.mapSel=(k&&ui.mapSel!==k)?k:null;render();},
+ setTwin(v){ui.twin=v;render();},twinTab(t){ui.twinTab=t;render();},goTwin(id){ui.twin=id;ui.twinTab='summary';go('twin');},
+ stage(k,v){ui.f.search[k]=v;},applySearch(){ui.applied.search=Object.assign({},ui.f.search);ui.tbl.search=null;render();},
+ clearSearch(){Object.keys(ui.f.search).forEach(k=>ui.f.search[k]='');ui.applied.search={};ui.tbl.search=null;render();},
+ exportAll(){exportCSV(S.cases,'complaint-records-all.csv');},
+ exportRows(w){const cs=w==='search'?filterCases(ui.applied.search):S.cases.filter(c=>{const f=ui.f.rep,win=f.range==='all'?null:+f.range;return (f.inst===''||c.inst===+f.inst)&&(!win||diff(TODAY,c.recv)<win);});exportCSV(cs,w==='search'?'complaint-search-results.csv':'complaint-report-filtered.csv');},
+ markRead(id){if(S.read[id])delete S.read[id];else S.read[id]=true;save();render();},
+ readAll(){allAlerts().forEach(a=>{S.read[a.id]=true;});save();render();toast('All alerts marked as read.');},
+ togglePause(){ui.live.paused=!ui.live.paused;render();},
+ quickOv(id,out){applyOv(id,out,out==='Related'?'Marked as related by the administrator (demonstration).':'Suggested match dismissed by the administrator (demonstration).');},
+ saveOv(id){const n=$('#ov-note').value.trim();if(!n){toast('Enter a review note to record the outcome.','warn');return;}applyOv(id,$('#ov-out').value,n);},
+ saveEv(id){const e=S.evidence.find(x=>x.id===id),st=$('#ev-st').value,note=$('#ev-note').value.trim();e.hist.push({d:TODAY,t:'Status set to '+st+(note?': '+note:'')});e.status=st;e.action=$('#ev-act').value.trim();const c=caseById(e.caseId);addHist(c,c.status,'Evidence status updated',e.id+' marked '+st+'. '+note);save();closeAll();render();toast(id+' updated.');},
+ saveEvNew(){const src=$('#en-src').value.trim(),by=$('#en-by').value.trim();if(!src||!by){toast('Enter who submitted the evidence and a source description.','warn');return;}const n=S.evidence.length?Math.max.apply(null,S.evidence.map(e=>+e.id.slice(2)))+1:101,f=$('#en-file').files[0],id='E-'+String(n).padStart(4,'0'),cid=$('#en-case').value;S.evidence.push({id:id,caseId:cid,type:$('#en-type').value,date:TODAY,by:by,src:src,status:'Awaiting Review',action:'',file:f?f.name:'',hist:[{d:TODAY,t:'Reference registered in demonstration data'}]});const c=caseById(cid);addHist(c,c.status,'Evidence reference registered',id+' registered: '+src);save();closeAll();render();toast('Evidence reference '+id+' registered.');},
+ pickDep(id){ui.depSel=id;render();},
+ saveDep(id){const d=S.deps.find(x=>x.id===id),st=$('#dp-st').value,note=$('#dp-note').value.trim();if(!note){toast('Enter an update note.','warn');return;}d.status=st;d.resolvedOn=st==='Response Received'?TODAY:'';d.updates.push({ts:nowTs(),t:st+': '+note});const c=caseById(d.caseId);addHist(c,c.status,'Dependency update: '+st,d.pending+'. '+note);save();closeAll();render();toast('Dependency '+id+' updated.');},
+ setW(k,v){S.weights[k]=+v;save();render();},resetW(){S.weights={sla:25,overdue:20,severity:20,affected:10,repeat:10,missing:10,evidence:5};save();render();},
+ setCompact(v){S.settings.compact=v;save();render();},resetAll(){resetData();}
+};
+window.App=App;
+function updateClock(){const d=new Date();$('#clk').textContent=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+function init(){
+ buildNav();updateClock();setInterval(updateClock,20000);
+ if(window.innerWidth<1100&&window.innerWidth>=760)document.body.classList.add('nav-collapsed');
+ $('#burger').onclick=()=>{if(window.innerWidth<760)document.body.classList.toggle('nav-open');else document.body.classList.toggle('nav-collapsed');};
+ $('#ov').onclick=closeAll;
+ $('#bellBtn').onclick=()=>go('alerts');
+ $('#themeBtn').onclick=()=>App.toggleTheme();
+ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light',true);
+ let _pt=null;
+ window.addEventListener('beforeprint',()=>{if(ui.theme==='dark'){_pt='dark';applyTheme('light',true);render();}});
+ window.addEventListener('afterprint',()=>{if(_pt){applyTheme(_pt,true);_pt=null;render();}});
+ $('#setBtn').onclick=settingsModal;
+ $('#demoBtn').onclick=()=>{ui.demo.on?demoExit():demoGo(0);};
+ $('#profBtn').onclick=e=>{e.stopPropagation();$('#profMenu').classList.toggle('on');};
+ document.addEventListener('click',e=>{if(!e.target.closest('#profMenu'))$('#profMenu').classList.remove('on');});
+ $('#profMenu').onclick=e=>{const m=e.target.dataset.m;$('#profMenu').classList.remove('on');if(m==='csv')App.exportAll();};
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+ setInterval(()=>{if(ui.view==='live'&&!ui.live.paused&&!$('#modal').classList.contains('on')&&!$('#drawer').classList.contains('on')){simEvent();render();}},5000);
+ render();
+}
+if(typeof window!=='undefined')window.__T={VIEWS:VIEWS,ui:ui,S:()=>S,seed:seed,riskOf:riskOf,priority:priority,allAlerts:allAlerts,INST:INST,gaps:gaps,DEMO:DEMO,exportCSV:CSVCOLS};
+if(typeof document!=='undefined')init();
+})();
+</script>
+</body>
+</html>
