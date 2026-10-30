@@ -179,9 +179,32 @@ body.demo-on main{padding-bottom:230px}
 :root[data-theme="dark"] .stp.cur{box-shadow:inset 0 0 0 1px var(--lnk)}
 .selbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .selbar .btn-sm{font-weight:600}
+/* ============ Landing / role selection ============ */
+#land{display:none;min-height:100vh;background:linear-gradient(180deg,var(--hd) 0,var(--hd) 250px,var(--bg) 250px);padding:34px 20px 50px}
+body.no-role #land{display:block}
+body.no-role #hdr,body.no-role #side,body.no-role main,body.no-role #demo{display:none!important}
+.land-in{max-width:980px;margin:0 auto}
+.land-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:#fff}
+.land-top h1{color:#fff;font-size:24px;line-height:1.25}
+.land-top p{margin:4px 0 0;color:#CFE3F8;font-size:13px}
+.land-brand{display:flex;gap:14px;align-items:center}
+.rcards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.rcard{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:20px;box-shadow:0 4px 16px rgba(23,43,77,.12);display:flex;flex-direction:column;gap:10px}
+.rcard h3{font-size:18px}
+.rcard ul{margin:0;padding-left:18px;font-size:13px}
+.rcard .btn{align-self:flex-start;padding:9px 16px;font-size:13.5px;margin-top:4px}
+.pflow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--text2)}
+.pflow .pn{border:1px solid var(--bd);background:var(--surf);border-radius:3px;padding:2px 7px}
+button.fn{cursor:pointer;text-align:left;font:inherit;color:inherit}
+button.fn:hover{border-color:var(--steel)}
+.fn.on{border-color:var(--blue);background:var(--selbg)}
+.fn b{display:block;font-size:20px;color:var(--navy)}
+.fn.intake{background:var(--surf);border-style:dashed}
+@media(max-width:760px){.rcards{grid-template-columns:1fr}.land-top h1{font-size:19px}}
+@media print{#land{display:none!important}}
 </style>
 </head>
-<body>
+<body class="no-role">
 <header id="hdr">
  <div class="hl">
   <button class="ibtn" id="burger" aria-label="Toggle navigation" title="Toggle navigation"><svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
@@ -194,11 +217,12 @@ body.demo-on main{padding-bottom:230px}
   <button class="ibtn" id="themeBtn" aria-label="Switch between light and dark mode" title="Switch to dark mode"><svg class="ico" viewBox="0 0 24 24" id="themeIco"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
   <button class="ibtn" id="bellBtn" aria-label="Notifications" title="Alerts &amp; Notifications"><svg class="ico" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><span class="cnt" id="bellCnt">0</span></button>
   <button class="ibtn" id="setBtn" aria-label="Settings" title="Settings"><svg class="ico" viewBox="0 0 24 24"><path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2.2"/><circle cx="9" cy="12" r="2.2"/><circle cx="17" cy="18" r="2.2"/></svg></button>
-  <button class="prof" id="profBtn" aria-haspopup="true"><span class="av">AD</span><span class="pt"><b>Administrator</b><span>Oversight Cell (demo)</span></span><span style="font-size:10px">▾</span></button>
+  <button class="prof" id="profBtn" aria-haspopup="true"><span class="av" id="avTxt">AD</span><span class="pt"><b id="roleName">Administrator</b><span id="roleSub">Oversight Cell (demo)</span></span><span style="font-size:10px">▾</span></button>
  </div>
 </header>
 <div class="menu" id="profMenu" role="menu">
- <button data-m="csv">Export all complaint records (CSV)</button>
+ <button data-m="csv" id="mCsv">Export all complaint records (CSV)</button>
+ <button data-m="role">Switch role (back to landing page)</button>
 </div>
 <aside id="side" aria-label="Primary navigation"><nav id="nav"></nav></aside>
 <main id="main"><div id="content"></div>
@@ -209,6 +233,7 @@ body.demo-on main{padding-bottom:230px}
 <div id="modal" role="dialog" aria-modal="true"></div>
 <div id="toast" aria-live="polite"></div>
 <div id="demo" role="dialog" aria-label="Assist"></div>
+<div id="land"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onerror="void 0"></script>
 <script>
@@ -236,6 +261,12 @@ const pct=(n,d)=>d?Math.round(100*n/d):0;
 const hash=s=>{let h=7;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;};
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 const nowTs=()=>{const d=new Date();return TODAY+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+/* OPTIMIZATION: debounce() — render() rebuilds the whole view (innerHTML
+   + chart destroy/recreate) on every call. Free-text search inputs used to
+   invoke it on every keystroke. Debounced search inputs below now wait for
+   a short pause in typing before re-rendering, cutting re-renders during a
+   typical search from ~1 per keystroke to ~1 per word. */
+const debounce=(fn,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn.apply(null,a),ms);};};
 
 /* =====================================================================
    2. REFERENCE DATA (fictional)
@@ -359,7 +390,10 @@ function seed(){
  ];
  return {v:1,cases,hist,evidence,overlaps,deps,read:{},weights:{sla:25,overdue:20,severity:20,affected:10,repeat:10,missing:10,evidence:5},nextCase:1,settings:{compact:false}};
 }
-function loadState(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.v===1)return o;}}catch(e){}return seed();}
+/* The demonstration complainant "owns" three sample cases; complaints submitted in the portal are added to them */
+const MINE=['CASE-2026-0142','CASE-2026-0155','CASE-2026-0109'];
+function ensureMine(o){if(!o.cases.some(c=>c.mine))o.cases.forEach(c=>{if(MINE.includes(c.id))c.mine=true;});return o;}
+function loadState(){try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&o.v===1)return ensureMine(o);}}catch(e){}return ensureMine(seed());}
 let S=loadState();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
@@ -370,11 +404,44 @@ const caseById=id=>S.cases.find(c=>c.id===id);
 const slaDays=c=>diff(c.sla,TODAY);
 const sinceAction=c=>diff(TODAY,c.last);
 const overdueNext=c=>isOpen(c)&&!!c.next&&diff(TODAY,c.next)>0;
-const caseEvidence=c=>S.evidence.filter(e=>e.caseId===c.id);
-const caseOverlaps=c=>S.overlaps.filter(o=>o.a===c.id||o.b===c.id);
-const caseHist=c=>S.hist.filter(h=>h.caseId===c.id).sort((a,b)=>a.ts<b.ts?-1:1);
-const caseDep=c=>S.deps.filter(d=>d.caseId===c.id);
+/* --- OPTIMIZATION: indexed lookups -------------------------------------
+   caseEvidence/caseOverlaps/caseHist/caseDep used to be O(n) linear scans
+   over the full dataset, called repeatedly for every case inside other
+   .map()/.filter() passes (effectively O(n^2) per render). buildIndexes()
+   now groups each dataset into a Map keyed by case id ONCE per render, so
+   every per-case lookup below becomes O(1). Falls back to the original
+   linear scan if called before the first index build (safe no-op). ------ */
+const EMPTY=[];
+let evByCase=null,ovByCase=null,histByCase=null,depByCase=null,prioCache=null;
+function idxPush(map,key,val){const a=map.get(key);if(a)a.push(val);else map.set(key,[val]);}
+function buildIndexes(){
+ evByCase=new Map();S.evidence.forEach(e=>idxPush(evByCase,e.caseId,e));
+ ovByCase=new Map();S.overlaps.forEach(o=>{idxPush(ovByCase,o.a,o);idxPush(ovByCase,o.b,o);});
+ histByCase=new Map();S.hist.forEach(h=>idxPush(histByCase,h.caseId,h));
+ histByCase.forEach(a=>a.sort((x,y)=>x.ts<y.ts?-1:1));
+ depByCase=new Map();S.deps.forEach(d=>idxPush(depByCase,d.caseId,d));
+ prioCache=new Map();
+}
+const caseEvidence=c=>evByCase?(evByCase.get(c.id)||EMPTY):S.evidence.filter(e=>e.caseId===c.id);
+const caseOverlaps=c=>ovByCase?(ovByCase.get(c.id)||EMPTY):S.overlaps.filter(o=>o.a===c.id||o.b===c.id);
+const caseHist=c=>histByCase?(histByCase.get(c.id)||EMPTY):S.hist.filter(h=>h.caseId===c.id).sort((a,b)=>a.ts<b.ts?-1:1);
+const caseDep=c=>depByCase?(depByCase.get(c.id)||EMPTY):S.deps.filter(d=>d.caseId===c.id);
 function slaState(c){if(!isOpen(c))return 'Completed';const d=slaDays(c);return d<0?'Breached':d<=7?'Due ≤ 7 days':'Within SLA';}
+/* Workflow stages mirror the process flow. The stage is derived from status, officer assignment and follow-up, so every view agrees with the register. */
+const STAGES=[['Registered','Case Registered & ID Generated','Registered'],['Triage','Triage & Classify Cases','Triage'],['Assigned','Assign Bureau/Officer','Assigned'],['Status Update','Update Status','Status'],['Audit','Audit & Action Process','Audit'],['Collaboration','Collaborate & Resolve Case','Collaborate'],['Disposed','Case Handled & Disposed','Disposed']];
+const stageLabel=k=>(STAGES.find(s=>s[0]===k)||[0,k])[1];
+const stageIdx=c=>STAGES.findIndex(s=>s[0]===wfStage(c));
+function wfStage(c){
+ if(!isOpen(c))return 'Disposed';
+ switch(c.status){
+  case 'Escalated':return 'Audit';
+  case 'Awaiting Department Response':return 'Collaboration';
+  case 'In Progress':return 'Status Update';
+  case 'New':return c.officer?'Assigned':(c.fu?'Triage':'Registered');
+  default:return c.officer?'Assigned':'Triage';
+ }
+}
+const STEP_NEXT={'Registered':'Acknowledge the complaint and move it to triage.','Triage':'Classify the complaint and assign a bureau officer.','Assigned':'Start work and record a status update.','Status Update':'Send the case for audit and action.','Audit':'Request departmental collaboration to resolve it.','Collaboration':'Record the outcome and dispose of the case.','Disposed':'Case handled and disposed; no further step.'};
 const GAPL={missed:'Action overdue',sla:'SLA breached',near:'Deadline near',unassigned:'Unassigned',nofu:'No follow-up',await:'Awaiting response',returned:'Returned',stale:'Stale'};
 function gaps(c){
  const g=[];if(!isOpen(c))return g;
@@ -424,7 +491,17 @@ function pScore(c){
  Object.keys(f).forEach(k=>{contrib[k]=w[k]*f[k]/tw*100;score+=contrib[k];});
  return {score:Math.round(score),f,contrib};
 }
-function priority(c){if(!isOpen(c))return '—';const s=pScore(c).score;return s>=66?'Critical':s>=45?'High':s>=28?'Medium':'Low';}
+function priority(c){
+ if(!isOpen(c))return '—';
+ /* OPTIMIZATION: priority(c) is called many times per render (filter bars,
+    badges, risk indicators, alerts) and used to recompute the full weighted
+    pScore() every time. Cache the result per case for the lifetime of a
+    single render pass (cache is cleared in buildIndexes() each render). */
+ if(prioCache&&prioCache.has(c.id))return prioCache.get(c.id);
+ const s=pScore(c).score,p=s>=66?'Critical':s>=45?'High':s>=28?'Medium':'Low';
+ if(prioCache)prioCache.set(c.id,p);
+ return p;
+}
 function pExplain(c){
  if(!isOpen(c))return 'Case is closed; priority is not assessed.';
  const p=pScore(c),f=p.f,sd=slaDays(c),r=[];
@@ -504,10 +581,10 @@ function filterCases(f,list){
 /* =====================================================================
    5. UI STATE AND HELPERS
    ===================================================================== */
-const ui={view:'dash',tbl:{},post:[],inst:0,twin:'CASE-2026-0142',twinTab:'summary',depSel:'DEP-01',mapSel:null,
+const ui={role:null,sub:null,view:'dash',tbl:{},post:[],inst:0,twin:'CASE-2026-0142',twinTab:'summary',depSel:'DEP-01',mapSel:null,
  f:{dash:{inst:'',range:'90'},cases:{q:'',status:'',inst:'',dept:'',prio:''},gap:{type:''},hist:{inst:'',q:'',dept:'',type:'',from:'',to:''},
   search:{q:'',inst:'',state:'',dept:'',status:'',prio:'',sla:'',from:'',to:'',cat:''},alerts:{sev:'',unread:false},rep:{inst:'',range:'180'},
-  risk:{inst:'0'},map:{inst:'0',q:'',mode:'graph'},overlap:{status:''},evid:{status:''}},
+  risk:{inst:'0'},map:{inst:'0',q:'',mode:'graph'},overlap:{status:''},evid:{status:''},flow:{stage:'',inst:''}},
  applied:{search:{}},live:{paused:false,feed:null,newCount:0},demo:{on:false,step:0}};
 const charts=[];
 /* One college selection shared by Central Dashboard, Institution Profile, Risk Signals and Relationship Map */
@@ -523,14 +600,20 @@ const IC={dash:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width
  history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 8v4l3 2"/>',blind:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>',
  twin:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',deps:'<rect x="3" y="9" width="6" height="6"/><rect x="15" y="3" width="6" height="6"/><rect x="15" y="15" width="6" height="6"/><path d="M9 12h3l3-6M12 12l3 6"/>',
  evidence:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 14l2 2 4-4"/>',priority:'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="18" r="2"/>',
- search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/>',alerts:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',reports:'<path d="M4 20V4M4 20h16"/><rect x="8" y="12" width="3" height="6"/><rect x="14" y="7" width="3" height="11"/>'};
-const NAV=[['OVERVIEW',[['dash','Central Dashboard'],['live','Live Monitoring']]],
+ search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/>',alerts:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',reports:'<path d="M4 20V4M4 20h16"/><rect x="8" y="12" width="3" height="6"/><rect x="14" y="7" width="3" height="11"/>',
+ udash:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+ submit:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+ flow:'<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h3M14 12h3"/>'};
+const NAV_ADMIN=[['OVERVIEW',[['dash','Central Dashboard'],['live','Live Monitoring']]],
  ['INSTITUTION',[['inst','Institution Profile'],['risk','Institutional Risk Signals'],['map','Issue Relationship Map']]],
+ ['CASE WORKFLOW',[['flow','Case Workflow']]],
  ['CASE MANAGEMENT',[['cases','Complaint Tracking'],['gaps','Action Gap Detector'],['overlap','Overlap Detection'],['history','Action History'],['blind','Complaint Blind-Spot Detector'],['twin','Complaint view']]],
  ['INTELLIGENCE & EVIDENCE',[['deps','Department Dependencies'],['evidence','Evidence Provenance'],['priority','Explainable Priority Engine']]],
  ['ADMINISTRATION',[['search','Search & Filters'],['alerts','Alerts & Notifications'],['reports','Reports & Analytics']]]];
+const NAV_USER=[['MY COMPLAINTS',[['udash','User Dashboard'],['submit','Submit New Complaint']]]];
+const navList=()=>ui.role==='user'?NAV_USER:NAV_ADMIN;
 function buildNav(){
- $('#nav').innerHTML=NAV.map(g=>'<div class="nsec">'+esc(g[0])+'</div>'+g[1].map(i=>'<button class="nit" data-v="'+i[0]+'" title="'+esc(i[1])+'"><svg class="ico" viewBox="0 0 24 24">'+IC[i[0]]+'</svg><span>'+esc(i[1])+'</span></button>').join('')).join('');
+ $('#nav').innerHTML=navList().map(g=>'<div class="nsec">'+esc(g[0])+'</div>'+g[1].map(i=>'<button class="nit" data-v="'+i[0]+'" title="'+esc(i[1])+'"><svg class="ico" viewBox="0 0 24 24">'+IC[i[0]]+'</svg><span>'+esc(i[1])+'</span></button>').join('')).join('');
  document.querySelectorAll('.nit').forEach(b=>b.onclick=()=>go(b.dataset.v));
 }
 const badge=(t,k)=>'<span class="badge b-'+k+'">'+esc(t)+'</span>';
@@ -590,7 +673,7 @@ function openOv(){$('#ov').classList.add('on');}
 function closeAll(){['#drawer','#modal','#ov'].forEach(s=>$(s).classList.remove('on'));$('#profMenu').classList.remove('on');}
 function modal(title,body,foot){$('#modal').innerHTML='<div class="mh"><h3>'+esc(title)+'</h3><button class="btn btn-sm" onclick="App.closeAll()">Close</button></div><div class="mb">'+body+'</div>'+(foot?'<div class="mf">'+foot+'</div>':'');$('#modal').classList.add('on');$('#drawer').classList.remove('on');openOv();}
 function csvCell(v){v=v==null?'':String(v);return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
-const CSVCOLS=[['Case ID',c=>c.id],['Title',c=>c.title],['Institution',c=>INST[c.inst].name],['State',c=>INST[c.inst].state],['Department',c=>c.dept],['Category',c=>c.cat],['Date received',c=>c.recv],['Status',c=>c.status],['Assigned officer',c=>c.officer||'Unassigned'],['Last action date',c=>c.last],['Next action due',c=>c.next||''],['SLA deadline',c=>c.sla],['Days without action',c=>isOpen(c)?sinceAction(c):''],['SLA condition',c=>slaState(c)],['Priority (illustrative)',c=>priority(c)]];
+const CSVCOLS=[['Case ID',c=>c.id],['Title',c=>c.title],['Institution',c=>INST[c.inst].name],['State',c=>INST[c.inst].state],['Department',c=>c.dept],['Category',c=>c.cat],['Date received',c=>c.recv],['Status',c=>c.status],['Workflow stage',c=>stageLabel(wfStage(c))],['Assigned officer',c=>c.officer||'Unassigned'],['Last action date',c=>c.last],['Next action due',c=>c.next||''],['SLA deadline',c=>c.sla],['Days without action',c=>isOpen(c)?sinceAction(c):''],['SLA condition',c=>slaState(c)],['Priority (illustrative)',c=>priority(c)]];
 function exportCSV(cs,name){
  const rows=[CSVCOLS.map(c=>c[0])].concat(cs.map(c=>CSVCOLS.map(k=>k[1](c))));
  const csv='\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');
@@ -746,19 +829,19 @@ VIEWS.map=function(){
  const body=f.mode==='graph'?
   '<div class="cb"><div class="lg" style="margin-bottom:10px"><span><i style="background:var(--g-inst)"></i>Institution</span><span><i style="background:var(--g-case)"></i>Complaint</span><span><i style="background:var(--g-dept)"></i>Department</span><span><i style="background:var(--g-cat)"></i>Issue category</span><span><i style="background:var(--g-off)"></i>Officer</span><span><i style="background:var(--g-ev)"></i>Evidence record</span></div><div class="gwrap"><svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Relationship graph">'+heads+edgeS+nodeS+'</svg></div><p class="muted xs">Showing '+g.shown.length+' of '+g.total+' complaints for this institution (open and highest priority first). Scroll horizontally on narrow screens or switch to list view.</p></div>':list;
  return pageHead('Issue Relationship Map','Institutions, complaints, departments, categories, officers and evidence',
-  fld('College (synced with Central Dashboard)',selectH('m-inst',instOpts(),f.inst,"App.setMap('inst',this.value)"))+fld('Find node','<input id="m-q" type="search" value="'+esc(f.q)+'" placeholder="e.g. Accounts, 0142" oninput="App.setMap(\'q\',this.value)">')+
+  fld('College (synced with Central Dashboard)',selectH('m-inst',instOpts(),f.inst,"App.setMap('inst',this.value)"))+fld('Find node','<input id="m-q" type="search" value="'+esc(f.q)+'" placeholder="e.g. Accounts, 0142" oninput="App.setMapD(\'q\',this.value)">')+
   '<button class="btn '+(f.mode==='graph'?'btn-p':'')+'" onclick="App.setMap(\'mode\',\'graph\')">Graph view</button><button class="btn '+(f.mode==='list'?'btn-p':'')+'" onclick="App.setMap(\'mode\',\'list\')">List view</button>')+
   '<div class="g2"><section class="card">'+body+'</section>'+card('Node details','<div class="cb">'+detail+(sel?'<p><button class="btn btn-sm" onclick="App.mapPick(null)">Clear selection</button></p>':'')+'</div>')+'</div>';
 };
 /* ---- Complaint tracking ---- */
 const caseCols=()=>[
  {h:'Case ID',r:c=>caseLink(c.id),s:c=>c.id},{h:'Complaint title',r:c=>esc(c.title),s:c=>c.title},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Department',r:c=>esc(c.dept),s:c=>c.dept},
- {h:'Category',r:c=>esc(c.cat),s:c=>c.cat},{h:'Received',r:c=>fmt(c.recv),s:c=>c.recv},{h:'Status',r:c=>statusBadge(c.status),s:c=>c.status},{h:'Assigned officer',r:c=>c.officer?esc(c.officer):badge('Unassigned','crit'),s:c=>c.officer},
+ {h:'Category',r:c=>esc(c.cat),s:c=>c.cat},{h:'Received',r:c=>fmt(c.recv),s:c=>c.recv},{h:'Status',r:c=>statusBadge(c.status),s:c=>c.status},{h:'Workflow stage',r:c=>badge(stageLabel(wfStage(c)),isOpen(c)?'info':'ok'),s:c=>stageIdx(c)},{h:'Assigned officer',r:c=>c.officer?esc(c.officer):badge('Unassigned','crit'),s:c=>c.officer},
  {h:'Last action',r:c=>fmt(c.last),s:c=>c.last},{h:'Next due',r:c=>c.next?fmt(c.next):'—',s:c=>c.next||''},{h:'SLA deadline',r:c=>fmt(c.sla),s:c=>c.sla},{h:'Days w/o action',r:c=>isOpen(c)?sinceAction(c):'—',s:c=>isOpen(c)?sinceAction(c):-1},
  {h:'SLA',r:slaBadge,s:c=>slaDays(c)},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score}];
 VIEWS.cases=function(){
  const f=ui.f.cases,rows=filterCases(f);
- const bar='<div class="fbar">'+fld('Search','<input id="c-q" type="search" value="'+esc(f.q)+'" placeholder="Case ID, title, officer…" oninput="App.setF(\'cases\',\'q\',this.value)">')+fld('Status',selectH('c-st',STATUSES,f.status,"App.setF('cases','status',this.value)",'All statuses'))+fld('Institution',selectH('c-in',instOpts(),f.inst,"App.setF('cases','inst',this.value)",'All institutions'))+fld('Department',selectH('c-dp',DEPTS,f.dept,"App.setF('cases','dept',this.value)",'All departments'))+fld('Priority',selectH('c-pr',['Critical','High','Medium','Low'],f.prio,"App.setF('cases','prio',this.value)",'All priorities'))+'<button class="btn" onclick="App.clearF(\'cases\')">Clear</button></div>';
+ const bar='<div class="fbar">'+fld('Search','<input id="c-q" type="search" value="'+esc(f.q)+'" placeholder="Case ID, title, officer…" oninput="App.setFD(\'cases\',\'q\',this.value)">')+fld('Status',selectH('c-st',STATUSES,f.status,"App.setF('cases','status',this.value)",'All statuses'))+fld('Institution',selectH('c-in',instOpts(),f.inst,"App.setF('cases','inst',this.value)",'All institutions'))+fld('Department',selectH('c-dp',DEPTS,f.dept,"App.setF('cases','dept',this.value)",'All departments'))+fld('Priority',selectH('c-pr',['Critical','High','Medium','Low'],f.prio,"App.setF('cases','prio',this.value)",'All priorities'))+'<button class="btn" onclick="App.clearF(\'cases\')">Clear</button></div>';
  return pageHead('Complaint Tracking','Searchable complaint register — select a case ID to open the detail panel','<button class="btn" onclick="App.exportAll()">Export CSV</button>')+
   '<section class="card">'+bar+table('cases',caseCols(),rows,{ps:12,rowAttr:c=>'data-hl="row-'+c.id+'"'})+'</section>';
 };
@@ -792,7 +875,7 @@ VIEWS.history=function(){
  const rows=S.hist.filter(h=>{const c=caseById(h.caseId);return c&&(f.inst===''||c.inst===+f.inst)&&(!f.dept||h.dept===f.dept)&&(!f.type||h.action===f.type)&&(!q||h.caseId.toLowerCase().includes(q))&&(!f.from||h.ts.slice(0,10)>=f.from)&&(!f.to||h.ts.slice(0,10)<=f.to);}).sort((a,b)=>a.ts<b.ts?1:-1);
  const types=Array.from(new Set(S.hist.map(h=>h.action))).sort();
  const cols=[{h:'Timestamp',r:h=>fmtT(h.ts),s:h=>h.ts},{h:'Case ID',r:h=>caseLink(h.caseId),s:h=>h.caseId},{h:'Previous',r:h=>esc(h.prev)},{h:'New status',r:h=>esc(h.next)},{h:'Action performed',r:h=>esc(h.action),s:h=>h.action},{h:'Responsible officer',r:h=>esc(h.officer)},{h:'Department',r:h=>esc(h.dept)},{h:'Administrative note',r:h=>'<span class="small">'+esc(h.note)+'</span>'},{h:'Source',r:h=>h.sim?badge('Sample record','neutral'):badge('Recorded in demo','teal')}];
- const bar='<div class="fbar">'+fld('Institution',selectH('h-in',instOpts(),f.inst,"App.setF('hist','inst',this.value)",'All'))+fld('Case ID','<input id="h-q" type="search" value="'+esc(f.q)+'" placeholder="CASE-2026-…" oninput="App.setF(\'hist\',\'q\',this.value)">')+fld('Department',selectH('h-dp',DEPTS,f.dept,"App.setF('hist','dept',this.value)",'All'))+fld('Action type',selectH('h-ty',types,f.type,"App.setF('hist','type',this.value)",'All'))+fld('From','<input id="h-f" type="date" value="'+esc(f.from)+'" onchange="App.setF(\'hist\',\'from\',this.value)">')+fld('To','<input id="h-t" type="date" value="'+esc(f.to)+'" onchange="App.setF(\'hist\',\'to\',this.value)">')+'<button class="btn" onclick="App.clearF(\'hist\')">Clear</button></div>';
+ const bar='<div class="fbar">'+fld('Institution',selectH('h-in',instOpts(),f.inst,"App.setF('hist','inst',this.value)",'All'))+fld('Case ID','<input id="h-q" type="search" value="'+esc(f.q)+'" placeholder="CASE-2026-…" oninput="App.setFD(\'hist\',\'q\',this.value)">')+fld('Department',selectH('h-dp',DEPTS,f.dept,"App.setF('hist','dept',this.value)",'All'))+fld('Action type',selectH('h-ty',types,f.type,"App.setF('hist','type',this.value)",'All'))+fld('From','<input id="h-f" type="date" value="'+esc(f.from)+'" onchange="App.setF(\'hist\',\'from\',this.value)">')+fld('To','<input id="h-t" type="date" value="'+esc(f.to)+'" onchange="App.setF(\'hist\',\'to\',this.value)">')+'<button class="btn" onclick="App.clearF(\'hist\')">Clear</button></div>';
  return pageHead('Action History','Chronological, auditable record of case events')+'<div class="note">Entries labelled “Sample record” are generated demonstration history. Entries labelled “Recorded in demo” were created by actions performed in this browser session and saved locally.</div><section class="card">'+bar+table('hist',cols,rows,{ps:15})+'</section>';
 };
 /* ---- Blind-spot detector ---- */
@@ -819,7 +902,7 @@ VIEWS.twin=function(){
  const dec=[];
  if(isOpen(c)){if(!c.officer)dec.push('Assign a responsible officer.');if(slaDays(c)<0)dec.push('Decide whether to extend the SLA with a recorded justification or escalate.');ds.filter(d=>d.status==='Pending').forEach(d=>dec.push('Decide on escalation to '+d.support.join(' / ')+' for: '+d.pending+'.'));ov.filter(o=>o.review==='Potential Match'||o.review==='Under Review').forEach(o=>dec.push('Review the potentially related case '+(o.a===c.id?o.b:o.a)+'.'));ev.filter(e=>e.status!=='Reviewed – Consistent').forEach(e=>dec.push('Complete review of evidence '+e.id+' ('+e.status+').'));}
  let body='';
- if(tab==='summary')body='<div class="g2e"><section class="card"><div class="ch"><h3>Case summary</h3></div><div class="cb"><dl class="kv"><dt>Case ID</dt><dd>'+esc(c.id)+'</dd><dt>Title</dt><dd>'+esc(c.title)+'</dd><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Departments involved</dt><dd>'+esc(Array.from(new Set([c.dept].concat(ds.reduce((a,d)=>a.concat(d.support),[])))).join(', '))+'</dd><dt>Status</dt><dd>'+statusBadge(c.status)+'</dd><dt>Priority</dt><dd>'+prioBadge(priority(c))+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Received / SLA</dt><dd>'+fmt(c.recv)+' / '+fmt(c.sla)+' '+slaBadge(c)+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+'</dd></dl></div></section><div>'+
+ if(tab==='summary')body='<div class="g2e"><section class="card"><div class="ch"><h3>Case summary</h3></div><div class="cb"><dl class="kv"><dt>Case ID</dt><dd>'+esc(c.id)+'</dd><dt>Title</dt><dd>'+esc(c.title)+'</dd><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Departments involved</dt><dd>'+esc(Array.from(new Set([c.dept].concat(ds.reduce((a,d)=>a.concat(d.support),[])))).join(', '))+'</dd><dt>Status</dt><dd>'+statusBadge(c.status)+'</dd><dt>Workflow stage</dt><dd>'+esc(stageLabel(wfStage(c)))+'</dd><dt>Priority</dt><dd>'+prioBadge(priority(c))+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Received / SLA</dt><dd>'+fmt(c.recv)+' / '+fmt(c.sla)+' '+slaBadge(c)+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+'</dd></dl></div></section><div>'+
   card('Next required action','<div class="cb"><p style="margin:0"><b>'+esc(recAction(c))+'</b></p><p class="muted small">'+esc(pExplain(c))+'</p></div>','<button class="btn btn-p btn-sm" onclick="App.openCase(\''+c.id+'\')">Record action</button>')+
   card('Pending decisions','<div class="cb">'+(dec.length?'<ul style="margin:0;padding-left:18px">'+dec.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul>':'<span class="muted">No pending decisions.</span>')+'</div>')+'</div></div>';
  else if(tab==='timeline'){const h=caseHist(c);body=card('Timeline',' <div class="cb"><ul class="tl">'+h.map(x=>'<li class="'+(x.sim?'sim':'')+'"><div class="xs muted">'+fmtT(x.ts)+' · '+(x.sim?'Sample':'Recorded')+' · '+esc(x.officer)+'</div><b>'+esc(x.action)+'</b>'+(x.prev!==x.next?' ('+esc(x.prev)+' → '+esc(x.next)+')':'')+'<div class="small">'+esc(x.note)+'</div></li>').join('')+'</ul></div>');}
@@ -914,6 +997,180 @@ VIEWS.reports=function(){
 };
 
 /* =====================================================================
+   WORKFLOW ADDITIONS: landing and role selection, complainant portal, admin case workflow
+   ===================================================================== */
+const STEP_USER={'Registered':'Your complaint is registered and waiting to be acknowledged.','Triage':'The administration is classifying your complaint.','Assigned':'An officer has been assigned and will begin work.','Status Update':'Work is under way; status updates appear in the timeline below.','Audit':'Your case has been escalated for audit and action.','Collaboration':'The departments involved are collaborating to resolve your case.','Disposed':'Your case has been handled and disposed.'};
+const myLink=id=>'<button class="lnk" onclick="App.openMy(\''+id+'\')">'+esc(id)+'</button>';
+function stepper(c){const cur=stageIdx(c);return '<div class="steps">'+STAGES.map((s,i)=>'<div class="stp'+(i<cur?' on':i===cur?' cur':'')+'" title="'+esc(s[1])+'">'+esc(s[2])+'</div>').join('')+'</div>';}
+
+/* ---- Landing page and role selection (start of the process flow) ---- */
+function renderLanding(){
+ document.body.classList.add('no-role');closeAll();
+ const logo='<svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true" style="flex:none"><circle cx="18" cy="18" r="16.5" fill="none" stroke="#8FA6C0" stroke-width="1.5"/><circle cx="18" cy="18" r="12" fill="none" stroke="#8FA6C0" stroke-width="1"/><path d="M11 24h14M12 24v-8m4 8v-8m4 8v-8m4 8v-8M10 16l8-5 8 5z" fill="none" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+ $('#land').innerHTML='<div class="land-in"><div class="land-top"><div class="land-brand">'+logo+'<div><h1>Institutional Governance &amp; Complaint Monitoring System<span class="demo-tag">DEMO ENVIRONMENT</span></h1><p>AICTE-Aligned Institutional Oversight</p></div></div><button class="btn btn-sm" onclick="App.toggleTheme()">Light / dark</button></div>'+
+  '<p style="color:#CFE3F8;margin:26px 0 0;font-size:13px">Start: Landing Page &rarr; Role Selection. Choose how you want to enter the system.</p>'+
+  '<div class="rcards">'+
+  '<section class="rcard"><h3>Complainant <span class="muted small">(Student / Faculty)</span></h3><p class="muted small" style="margin:0">Raise a complaint against an institution and follow it through to resolution.</p><div class="pflow"><span class="pn">User Dashboard</span>&rarr;<span class="pn">Submit New Complaint</span>&rarr;<span class="pn">Details &amp; evidence</span>&rarr;<span class="pn">Overlap check</span>&rarr;<span class="pn">Case ID generated</span></div><ul><li>Track every complaint and its current stage</li><li>Attach evidence references</li><li>Receive the resolution notice</li></ul><button class="btn btn-p" onclick="App.setRole(\'user\')">Continue as Complainant</button></section>'+
+  '<section class="rcard"><h3>AICTE Official / Admin</h3><p class="muted small" style="margin:0">Monitor institutions and move each case from registration to disposal.</p><div class="pflow"><span class="pn">Admin Central Dashboard</span>&rarr;<span class="pn">Triage &amp; Classify</span>&rarr;<span class="pn">Assign Bureau/Officer</span>&rarr;<span class="pn">Update Status</span>&rarr;<span class="pn">Audit &amp; Action</span>&rarr;<span class="pn">Collaborate &amp; Resolve</span>&rarr;<span class="pn">Disposed</span></div><ul><li>Dashboards, risk signals and action-gap detection</li><li>Case Workflow view with a &ldquo;Complete step&rdquo; action per stage</li><li>Overlap review, dependencies and evidence tracking</li></ul><button class="btn btn-p" onclick="App.setRole(\'admin\')">Continue as Administrator</button></section></div>'+
+  '<p class="muted xs" style="margin-top:30px">Demonstration environment. All institutions, people, cases and figures are fictional. Not connected to AICTE or any government system; not an official record. Anything you submit is stored only in this browser.</p></div>';
+ document.title='Select role — Governance & Complaint Monitoring (Demo)';
+}
+function applyRoleChrome(){
+ const u=ui.role==='user';
+ $('#avTxt').textContent=u?'DC':'AD';$('#roleName').textContent=u?'Demo Complainant':'Administrator';$('#roleSub').textContent=u?'Student / Faculty (demo)':'Oversight Cell (demo)';
+ $('#bellBtn').style.display=u?'none':'';$('#demoBtn').style.display=u?'none':'';$('#mCsv').style.display=u?'none':'';
+}
+function setRole(r){
+ ui.role=r;try{if(r)sessionStorage.setItem('igcms_role',r);else sessionStorage.removeItem('igcms_role');}catch(e){}
+ ui.demo.on=false;ui.sub=null;
+ if(r){ui.view=r==='user'?'udash':'dash';buildNav();applyRoleChrome();}
+ closeAll();render();window.scrollTo(0,0);
+}
+
+/* ---- Complainant: User Dashboard ---- */
+VIEWS.udash=function(){
+ const mine=S.cases.filter(c=>c.mine).sort((a,b)=>a.recv<b.recv?1:a.recv>b.recv?-1:(a.id<b.id?1:-1));
+ const open=mine.filter(isOpen),res=mine.filter(c=>c.status==='Resolved'),flag=mine.filter(c=>caseOverlaps(c).some(o=>o.review==='Potential Match'||o.review==='Under Review'));
+ const kp=(l,v,d)=>'<div class="kpi"><div class="kpi-l">'+esc(l)+'</div><div class="kpi-v">'+v+'</div><div class="kpi-d">'+esc(d)+'</div></div>';
+ const notices=res.map(c=>{const h=caseHist(c).filter(x=>x.next==='Resolved').pop();return '<div class="alert low" style="border-left-color:var(--green)"><div>'+badge('Resolution issued & communicated','ok')+'</div><p style="margin:6px 0 3px">'+myLink(c.id)+' — '+esc(c.title)+'</p><p class="small muted" style="margin:0">Resolved on '+fmt(h?h.ts:c.last)+'. '+esc(h?h.note:'Resolution recorded and communicated.')+'</p></div>';}).join('');
+ const cols=[{h:'Case ID',r:c=>myLink(c.id),s:c=>c.id},{h:'Complaint',r:c=>esc(c.title),s:c=>c.title},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Submitted',r:c=>fmt(c.recv),s:c=>c.recv},
+  {h:'Current stage',r:c=>badge(stageLabel(wfStage(c)),isOpen(c)?'info':'ok'),s:c=>stageIdx(c)},{h:'Status',r:c=>statusBadge(c.status),s:c=>c.status},{h:'Expected by',r:c=>isOpen(c)?fmt(c.sla):'—',s:c=>c.sla},{h:'',r:c=>'<button class="btn btn-sm" onclick="App.openMy(\''+c.id+'\')">Track</button>'}];
+ return pageHead('User Dashboard','Your complaints and where each one stands','<button class="btn btn-p" onclick="App.newComplaint()">Submit New Complaint</button>')+
+  '<div class="note">Demonstration environment: complaints you submit here are stored only in this browser, and administrators see them when you switch role from the profile menu.</div>'+
+  '<div class="kpis">'+kp('My complaints',mine.length,'submitted by you')+kp('Open',open.length,'still being handled')+kp('Resolution issued',res.length,'notice communicated')+kp('Flagged for coordination',flag.length,'possible overlap with another case')+'</div>'+
+  (res.length?card('Resolution notices','<div class="cb">'+notices+'</div>'):'')+
+  card('My complaints',table('mycases',cols,mine,{ps:8}));
+};
+
+/* ---- Complainant: case tracking drawer (read-only) ---- */
+function openMy(id){
+ const c=caseById(id);if(!c)return;
+ const hist=caseHist(c).slice().reverse(),ev=caseEvidence(c),done=!isOpen(c);
+ const ov=caseOverlaps(c).filter(o=>o.review==='Potential Match'||o.review==='Under Review');
+ const resH=caseHist(c).filter(x=>x.next==='Resolved').pop();
+ $('#drawer').innerHTML='<div class="dh"><div><h3>'+esc(c.id)+'</h3><div style="margin-top:6px">'+statusBadge(c.status)+' '+badge(stageLabel(wfStage(c)),done?'ok':'info')+'</div></div><button class="btn btn-sm" onclick="App.closeAll()">Close</button></div><div class="db">'+
+  '<h4>Where your complaint stands</h4>'+stepper(c)+'<p class="small" style="margin:6px 0 0">'+esc(STEP_USER[wfStage(c)])+'</p>'+
+  (c.status==='Resolved'?'<div class="note" style="margin-top:12px;border-left-color:var(--green)"><b>Resolution issued &amp; communicated</b><br>'+esc(resH?resH.note:'Resolution recorded and communicated.')+'</div>':'')+
+  (ov.length?'<div class="note warn" style="margin-top:12px">Your complaint has been flagged for coordination with a similar complaint at the same institution. Administrators review this; nothing is merged without review and your case continues meanwhile.</div>':'')+
+  '<h4>Summary</h4><p style="margin:0 0 8px"><b>'+esc(c.title)+'</b></p>'+(c.desc?'<p class="small muted" style="margin:0 0 8px">'+esc(c.desc)+'</p>':'')+
+  '<dl class="kv"><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Department</dt><dd>'+esc(c.dept)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Submitted</dt><dd>'+fmt(c.recv)+'</dd><dt>Expected by</dt><dd>'+(done?'—':fmt(c.sla))+'</dd><dt>Assigned officer</dt><dd>'+esc(c.officer||'Awaiting assignment')+'</dd></dl>'+
+  '<h4>Evidence references</h4>'+(ev.length?'<ul class="small" style="margin:0;padding-left:18px">'+ev.map(e=>'<li>'+esc(e.id)+' — '+esc(e.type)+': '+esc(e.src)+' ('+esc(e.status)+')</li>').join('')+'</ul>':'<span class="muted small">None attached.</span>')+
+  '<h4>Timeline</h4><ul class="tl small">'+hist.map(x=>'<li class="'+(x.sim?'sim':'')+'"><span class="xs muted">'+fmtT(x.ts)+'</span><br><b>'+esc(x.action)+'</b> — '+esc(x.note)+'</li>').join('')+'</ul></div>';
+ $('#drawer').classList.add('on');$('#modal').classList.remove('on');openOv();
+}
+
+/* ---- Complainant: Submit New Complaint (details, evidence, overlap check, case ID) ---- */
+function subInit(){return {step:1,d:{inst:'0',cRole:'Student',cat:CATS[0],dept:CD[CATS[0]][0],title:'',desc:'',aff:'1'},ev:[],chk:null,res:null,err:''};}
+function overlapCheck(d){
+ const stop=new Set(['with','that','this','from','have','been','were','after','before','pending','delay','delayed','issue','complaint','students','student','their','there']);
+ const tok=t=>new Set((String(t).toLowerCase().match(/[a-z]{4,}/g)||[]).filter(w=>!stop.has(w)));
+ const mine=tok(d.title+' '+d.desc),out=[];
+ S.cases.filter(c=>isOpen(c)&&c.inst===+d.inst&&c.cat===d.cat).forEach(c=>{
+  const o=tok(c.title);let inter=0;mine.forEach(w=>{if(o.has(w))inter++;});
+  const uni=mine.size+o.size-inter,jac=uni?inter/uni:0;
+  const sim=Math.min(95,35+(c.dept===d.dept?10:0)+Math.round(jac*150));
+  if(sim>=55)out.push({c:c,sim:sim,shared:inter});
+ });
+ return out.sort((a,b)=>b.sim-a.sim).slice(0,3);
+}
+function registerComplaint(){
+ const s=ui.sub,d=s.d;
+ let n=300+(S.nextCase||1);S.nextCase=(S.nextCase||1)+1;
+ while(caseById('CASE-2026-0'+n))n++;
+ const id='CASE-2026-0'+n;
+ const c={id:id,title:d.title.trim(),inst:+d.inst,dept:d.dept,cat:d.cat,recv:TODAY,status:'New',officer:'',last:TODAY,next:addD(TODAY,3),sla:addD(TODAY,21),sev:2,aff:Math.max(1,parseInt(d.aff,10)||1),ret:0,fu:false,notes:[],mine:true,cRole:d.cRole,desc:d.desc.trim()};
+ S.cases.push(c);
+ addHist(c,'—','Complaint registered','Complaint submitted through the complainant portal by a '+d.cRole.toLowerCase()+'. Case ID generated.');
+ let en=S.evidence.length?Math.max.apply(null,S.evidence.map(x=>+x.id.slice(2)))+1:101;
+ s.ev.forEach(x=>{const eid='E-'+String(en++).padStart(4,'0');S.evidence.push({id:eid,caseId:id,type:x.type,date:TODAY,by:'Complainant ('+d.cRole+')',src:x.desc,status:'Awaiting Review',action:'',file:x.file||'',hist:[{d:TODAY,t:'Reference registered with the complaint'}]});});
+ const hits=overlapCheck(d);
+ let on=S.overlaps.length?Math.max.apply(null,S.overlaps.map(x=>+x.id.slice(3)))+1:1;
+ hits.forEach(h=>{S.overlaps.push({id:'OV-'+String(on++).padStart(2,'0'),a:id,b:h.c.id,sim:h.sim,ev:s.ev.length?'New evidence references submitted with '+id:'No shared evidence',why:'Flagged at submission: same institution and category'+(h.c.dept===d.dept?' and department':'')+(h.shared?'; '+h.shared+' key term(s) in common':'')+'.',review:'Potential Match',note:''});});
+ if(hits.length)addHist(c,'New','System overlap check','Potential overlap with '+hits.map(h=>h.c.id).join(', ')+' flagged for administrator review.');
+ s.res={id:id,hits:hits};s.step=4;save();render();toast('Complaint registered as '+id+'.');
+}
+VIEWS.submit=function(){
+ if(!ui.sub)ui.sub=subInit();
+ const s=ui.sub,d=s.d,labels=['Select institution & fill details','Upload evidence & submit','System overlap check','Case registered & ID generated'];
+ const steps='<div class="steps">'+labels.map((l,i)=>'<div class="stp'+(i+1<s.step?' on':i+1===s.step?' cur':'')+'">'+(i+1)+'. '+esc(l)+'</div>').join('')+'</div>';
+ let body='';
+ if(s.step===1){
+  body='<div class="cb"><div class="fg">'+fld('Institution',selectH('sb-inst',instOpts(),d.inst,"App.sb('inst',this.value)"))+fld('You are a',selectH('sb-role',['Student','Faculty'],d.cRole,"App.sb('cRole',this.value)"))+fld('Issue category',selectH('sb-cat',CATS,d.cat,"App.sbCat(this.value)"))+fld('Department concerned',selectH('sb-dept',DEPTS,d.dept,"App.sb('dept',this.value)"))+fld('People affected (approx.)','<input id="sb-aff" type="text" inputmode="numeric" value="'+esc(d.aff)+'" oninput="App.sb(\'aff\',this.value)">')+'</div>'+
+   '<div style="margin-top:12px">'+fld('Complaint title','<input id="sb-title" type="text" style="width:100%" maxlength="140" value="'+esc(d.title)+'" placeholder="e.g. Scholarship amount not credited for this semester" oninput="App.sb(\'title\',this.value)">')+'</div>'+
+   '<div style="margin-top:12px">'+fld('Describe the issue','<textarea id="sb-desc" placeholder="What happened, since when, and what you have already tried" oninput="App.sb(\'desc\',this.value)">'+esc(d.desc)+'</textarea>')+'</div>'+
+   (s.err?'<div class="note warn" style="margin:12px 0 0">'+esc(s.err)+'</div>':'')+
+   '<div style="margin-top:14px"><button class="btn btn-p" onclick="App.sbNext()">Next: upload evidence &rarr;</button></div></div>';
+ }else if(s.step===2){
+  const evList=s.ev.length?'<div class="tw"><table class="tbl"><thead><tr><th>Type</th><th>Description</th><th>File</th><th></th></tr></thead><tbody>'+s.ev.map((e,i)=>'<tr><td>'+esc(e.type)+'</td><td>'+esc(e.desc)+'</td><td>'+esc(e.file||'—')+'</td><td><button class="btn btn-sm" onclick="App.sbDelEv('+i+')">Remove</button></td></tr>').join('')+'</tbody></table></div>':'<p class="muted small" style="margin:0">No evidence references added yet. Evidence is optional.</p>';
+  body='<div class="cb"><dl class="kv"><dt>Institution</dt><dd>'+esc(INST[+d.inst].name)+'</dd><dt>Category</dt><dd>'+esc(d.cat)+'</dd><dt>Department</dt><dd>'+esc(d.dept)+'</dd><dt>Title</dt><dd>'+esc(d.title)+'</dd></dl>'+
+   '<h4 style="margin:16px 0 8px;font-size:14px">Evidence references</h4>'+evList+
+   '<div class="fg" style="margin-top:12px">'+fld('Type',selectH('sb-etype',['Document','Administrative letter','Photograph','Correspondence reference','Email reference'],'Document',''))+fld('File (optional, name only)','<input id="sb-efile" type="file">')+'</div>'+
+   '<div style="margin-top:10px">'+fld('What the evidence shows','<textarea id="sb-edesc" style="min-height:50px" placeholder="Short description and where it came from"></textarea>')+'</div>'+
+   '<div style="margin-top:8px"><button class="btn btn-sm" onclick="App.sbAddEv()">Add evidence reference</button></div>'+
+   '<div class="note" style="margin-top:14px">Demonstration only: only the file name is kept in your browser. Nothing is uploaded and this is not a secure evidence repository.</div>'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="App.sbBack()">&larr; Back</button><button class="btn btn-p" onclick="App.sbCheck()">Submit &amp; run overlap check &rarr;</button></div></div>';
+ }else if(s.step===3){
+  const chk=s.chk||[];
+  body='<div class="cb">'+(chk.length?
+   '<div class="note warn"><b>Potential overlap found &mdash; coordination required.</b><br>The system found '+chk.length+' similar open complaint(s) about '+esc(d.cat)+' at '+esc(INST[+d.inst].name)+' (illustrative similarity up to '+chk[0].sim+'%). Your complaint will still be registered. Administrators will review the overlap and coordinate with the departments involved; nothing is merged automatically.</div>':
+   '<div class="note" style="border-left-color:var(--green)"><b>No overlap found.</b><br>No similar open complaint exists for this institution and category. Your complaint will be registered as a new case.</div>')+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="btn" onclick="App.sbBack()">&larr; Back and edit</button><button class="btn btn-p" onclick="App.sbRegister()">Register complaint &rarr;</button></div></div>';
+ }else{
+  const r=s.res,c=caseById(r.id);
+  body='<div class="cb"><div class="note" style="border-left-color:var(--green)"><b>Case registered &amp; ID generated.</b></div><div style="font-size:28px;font-weight:600;color:var(--navy);margin:6px 0 10px">'+esc(r.id)+'</div>'+
+   '<dl class="kv"><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Department</dt><dd>'+esc(c.dept)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Expected resolution by</dt><dd>'+fmt(c.sla)+'</dd><dt>Overlap check</dt><dd>'+(r.hits.length?'Flagged for coordination with a similar complaint':'No overlap found')+'</dd></dl>'+
+   '<p class="small muted">Next: the administration acknowledges and triages your complaint, assigns an officer and posts updates you can follow from your dashboard. A resolution notice appears there when the case is resolved.</p>'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-p" onclick="App.openMy(\''+r.id+'\')">Track this complaint</button><button class="btn" onclick="App.go(\'udash\')">Go to User Dashboard</button><button class="btn" onclick="App.newComplaint()">Submit another complaint</button></div></div>';
+ }
+ return pageHead('Submit New Complaint','Details, evidence, overlap check and case registration')+steps+'<section class="card" style="margin-top:12px">'+body+'</section>';
+};
+
+/* ---- Admin: Case Workflow (registration to disposal) ---- */
+VIEWS.flow=function(){
+ const f=ui.f.flow,base=S.cases.filter(c=>f.inst===''||c.inst===+f.inst);
+ const cnt=k=>base.filter(c=>wfStage(c)===k).length;
+ const pot=S.overlaps.filter(o=>o.review==='Potential Match'&&(f.inst===''||caseById(o.a).inst===+f.inst)).length;
+ const res=base.filter(c=>c.status==='Resolved').length;
+ const intake=[['Submit New Complaint','Complainant portal'],['Select Institution & Fill Details','Step 1'],['Upload Evidence & Submit','Step 2'],['System Overlap Check',pot+' potential overlap(s) awaiting review']].map((x,i)=>(i?'<span class="fa">→</span>':'')+'<div class="fn intake">'+esc(x[0])+'<small>'+esc(x[1])+'</small></div>').join('');
+ const nodes=STAGES.map((s,i)=>(i?'<span class="fa">→</span>':'')+'<button class="fn'+(f.stage===s[0]?' on':'')+'" onclick="App.setF(\'flow\',\'stage\',\''+(f.stage===s[0]?'':s[0])+'\')"><b>'+cnt(s[0])+'</b>'+esc(s[1])+'<small>'+esc(STEP_NEXT[s[0]])+'</small></button>').join('')+'<span class="fa">→</span><div class="fn done"><b>'+res+'</b>Resolution Issued &amp; Communicated<small>Notice to the complainant (demo)</small></div>';
+ const rows=base.filter(c=>f.stage?wfStage(c)===f.stage:isOpen(c)).sort((a,b)=>stageIdx(a)-stageIdx(b)||pScore(b).score-pScore(a).score);
+ const cols=[{h:'Case',r:c=>caseLink(c.id),s:c=>c.id},{h:'Institution',r:c=>esc(INST[c.inst].short),s:c=>INST[c.inst].short},{h:'Complaint',r:c=>esc(trunc(c.title,60)),s:c=>c.title},
+  {h:'Workflow stage',r:c=>badge(stageLabel(wfStage(c)),isOpen(c)?'info':'ok'),s:c=>stageIdx(c)},{h:'Status',r:c=>statusBadge(c.status),s:c=>c.status},{h:'Officer',r:c=>c.officer?esc(c.officer):badge('Unassigned','crit'),s:c=>c.officer},
+  {h:'Days since action',r:c=>isOpen(c)?sinceAction(c):'—',s:c=>isOpen(c)?sinceAction(c):-1},{h:'Priority',r:c=>prioBadge(priority(c)),s:c=>pScore(c).score},{h:'Next step',r:c=>'<span class="small">'+esc(STEP_NEXT[wfStage(c)])+'</span>'},
+  {h:'',r:c=>'<div style="display:flex;gap:4px">'+(isOpen(c)?'<button class="btn btn-sm btn-p" onclick="App.advance(\''+c.id+'\')">Complete step</button>':'')+'<button class="btn btn-sm" onclick="App.openCase(\''+c.id+'\')">View</button></div>'}];
+ return pageHead('Case Workflow','Every complaint from registration to disposal and resolution',fld('Institution',selectH('f-inst',instOpts(),f.inst,"App.setF('flow','inst',this.value)",'All institutions')))+
+  '<div class="note">A case&rsquo;s stage is derived from its status, officer assignment and follow-up record, so it always agrees with the complaint register. &ldquo;Complete step&rdquo; updates the status and writes an entry to Action History.</div>'+
+  '<section class="card"><div class="ch"><h3>Process flow</h3><span class="muted xs">Click a stage to filter the list</span></div><div class="cb" data-hl="flowmap"><div class="small muted" style="margin-bottom:6px">Intake (complainant portal)</div><div class="flow">'+intake+'</div><div class="small muted" style="margin:16px 0 6px">Administration</div><div class="flow">'+nodes+'</div></div></section>'+
+  card(f.stage?'Cases at: '+stageLabel(f.stage):'Open cases by workflow stage',table('flow',cols,rows,{ps:10}),f.stage?'<button class="btn btn-sm" onclick="App.setF(\'flow\',\'stage\',\'\')">Show all open cases</button>':'');
+};
+function advance(id){
+ const c=caseById(id);if(!c||!isOpen(c))return;
+ const st=wfStage(c),offs=INST[c.inst].officers;
+ let extra='';
+ if(st==='Triage')extra='<div class="fg"><label class="fld">Issue category'+selectH('ad-cat',CATS,c.cat,'')+'</label><label class="fld">Severity'+selectH('ad-sev',[[1,'Low'],[2,'Medium'],[3,'High']],c.sev,'')+'</label><label class="fld">Responsible department'+selectH('ad-dept',DEPTS,c.dept,'')+'</label><label class="fld">Assign bureau officer'+selectH('ad-off',offs,c.officer||offs[0],'')+'</label></div>';
+ else if(st==='Collaboration')extra='<div class="fg"><label class="fld">Outcome'+selectH('ad-out',[['Resolved','Resolved — issue resolution notice'],['Closed','Closed — no further action']],'Resolved','')+'</label></div>';
+ else extra='<div class="fg"><label class="fld">Next action due<input id="ad-next" type="date" value="'+addD(TODAY,st==='Registered'?3:7)+'"></label></div>';
+ modal('Complete workflow step — '+id,'<p class="small" style="margin:0 0 4px"><b>'+esc(c.id)+'</b> — '+esc(c.title)+'</p>'+(c.desc?'<p class="small muted" style="margin:0 0 6px">'+esc(c.desc)+'</p>':'')+'<p class="small muted">Current step: '+esc(stageLabel(st))+'. '+esc(STEP_NEXT[st])+'</p>'+extra+'<label class="fld" style="margin-top:10px">Administrative note<textarea id="ad-note" placeholder="Record what was done or decided"></textarea></label>','<button class="btn" onclick="App.closeAll()">Cancel</button><button class="btn btn-p" onclick="App.saveAdv(\''+id+'\')">Complete step</button>');
+}
+function saveAdv(id){
+ const c=caseById(id),st=wfStage(c),note=$('#ad-note').value.trim();
+ if(!note){toast('Enter an administrative note to complete this step.','warn');return;}
+ const nx=$('#ad-next')?$('#ad-next').value:'';
+ let patch={},action,msg=note;
+ if(st==='Registered'){patch={status:'Under Review'};action='Acknowledged; assigned for review';}
+ else if(st==='Triage'){patch={status:'Under Review',cat:$('#ad-cat').value,sev:+$('#ad-sev').value,dept:$('#ad-dept').value,officer:$('#ad-off').value};action='Triage & classify; officer assigned';msg='Classified as '+patch.cat+' (severity '+patch.sev+'); '+patch.dept+' responsible; officer '+patch.officer+'. '+note;}
+ else if(st==='Assigned'){patch={status:'In Progress'};action='Status update';}
+ else if(st==='Status Update'){patch={status:'Escalated'};action='Escalation';msg='Sent for audit and action. '+note;}
+ else if(st==='Audit'){patch={status:'Awaiting Department Response'};action='Collaboration requested';msg='Departmental collaboration requested. '+note;}
+ else if(st==='Collaboration'){patch={status:$('#ad-out').value};action='Status updated';}
+ else return;
+ const prev=c.status;Object.assign(c,patch);c.last=TODAY;c.fu=true;c.next=isOpen(c)?(nx||addD(TODAY,7)):null;
+ addHist(c,prev,action,msg);
+ if(c.status==='Resolved'&&prev!=='Resolved')addHist(c,'Resolved','Resolution issued & communicated','Resolution notice issued to the complainant (demonstration only; nothing is actually sent).');
+ save();closeAll();render();toast(c.id+': step completed. Now at "'+stageLabel(wfStage(c))+'".');
+}
+
+/* =====================================================================
    7. CASE DRAWER AND MODAL FORMS
    ===================================================================== */
 function openCase(id){
@@ -921,7 +1178,7 @@ function openCase(id){
  const g=gaps(c),h=caseHist(c).slice(-6).reverse(),ds=caseDep(c);
  const offs=INST[c.inst].officers.map(o=>[o,o]);
  $('#drawer').innerHTML='<div class="dh"><div><h3>'+esc(c.id)+'</h3><div style="margin-top:6px">'+statusBadge(c.status)+' '+prioBadge(priority(c))+' '+slaBadge(c)+'</div></div><button class="btn btn-sm" onclick="App.closeAll()">Close</button></div><div class="db">'+
-  '<h4>Summary</h4><p style="margin:0 0 8px"><b>'+esc(c.title)+'</b></p><dl class="kv"><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Department</dt><dd>'+esc(c.dept)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Received</dt><dd>'+fmt(c.recv)+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+(isOpen(c)?' ('+sinceAction(c)+' days ago)':'')+'</dd><dt>Next action due</dt><dd>'+fmt(c.next)+'</dd><dt>SLA deadline</dt><dd>'+fmt(c.sla)+'</dd></dl>'+
+  '<h4>Workflow stage</h4>'+stepper(c)+'<p class="small" style="margin:6px 0 0"><b>'+esc(stageLabel(wfStage(c)))+'</b> — '+esc(STEP_NEXT[wfStage(c)])+(isOpen(c)?' <button class="btn btn-sm btn-p" onclick="App.advance(\''+c.id+'\')">Complete step →</button>':'')+'</p><h4>Summary</h4><p style="margin:0 0 8px"><b>'+esc(c.title)+'</b></p>'+(c.desc?'<p class="small muted" style="margin:0 0 8px">'+esc(c.desc)+'</p>':'')+'<dl class="kv"><dt>Institution</dt><dd>'+esc(INST[c.inst].name)+'</dd><dt>Department</dt><dd>'+esc(c.dept)+'</dd><dt>Category</dt><dd>'+esc(c.cat)+'</dd><dt>Received</dt><dd>'+fmt(c.recv)+'</dd><dt>Officer</dt><dd>'+esc(c.officer||'Unassigned')+'</dd><dt>Last action</dt><dd>'+fmt(c.last)+(isOpen(c)?' ('+sinceAction(c)+' days ago)':'')+'</dd><dt>Next action due</dt><dd>'+fmt(c.next)+'</dd><dt>SLA deadline</dt><dd>'+fmt(c.sla)+'</dd></dl>'+
   '<h4>Action-gap findings</h4>'+(isOpen(c)?'<p class="small" style="margin:0 0 6px">'+esc(gapSummary(c))+'</p>'+(g.length?'<ul class="small" style="margin:0;padding-left:18px">'+g.map(x=>'<li>'+esc(x.t)+'</li>').join('')+'</ul>':''):'<span class="muted">Case is closed.</span>')+
   '<h4>Priority explanation (illustrative)</h4><p class="small" style="margin:0">'+esc(pExplain(c))+'</p><p class="small muted" style="margin:4px 0 0">Suggested action: '+esc(recAction(c))+'</p>'+
   (ds.length?'<h4>Department dependency</h4>'+ds.map(d=>'<p class="small" style="margin:0 0 4px">'+esc(d.primary)+' waiting on '+esc(d.support.join(', '))+' — '+esc(d.pending)+' ('+diff(d.resolvedOn||TODAY,d.since)+' days, '+esc(d.status)+')</p>').join(''):'')+
@@ -939,6 +1196,7 @@ function saveAction(id){
  if(off&&off!==c.officer){bits.push('Officer assigned: '+off);c.officer=off;}
  c.last=TODAY;c.fu=true;c.next=isOpen(c)?(nx||addD(TODAY,7)):null;
  addHist(c,prev,type,(bits.length?bits.join('; ')+'. ':'')+note);
+ if(c.status==='Resolved'&&prev!=='Resolved')addHist(c,'Resolved','Resolution issued & communicated','Resolution notice issued to the complainant (demonstration only; nothing is actually sent).');
  save();closeAll();render();toast('Action recorded for '+id+'. History updated.');openCase(id);
 }
 function reviewOv(id){
@@ -969,6 +1227,7 @@ function settingsModal(){modal('Settings','<label style="display:flex;gap:8px;al
    ===================================================================== */
 const DEMO=[
  {v:'dash',t:'Open the institutional overview',x:'The dashboard summarises complaints, SLA status and emerging issues. Every figure is computed from the same demonstration register used in the other views.',hl:'[data-hl="kpis"]',pre:()=>{ui.f.dash={inst:'',range:'90'};}},
+ {v:'flow',t:'Follow the case workflow',x:'Cases move from registration through triage, assignment, status updates, audit, collaboration and disposal. Each stage shows the cases waiting at it; “Complete step” advances a case and writes to Action History.',hl:'[data-hl="flowmap"]',pre:()=>{ui.f.flow={stage:'',inst:''};}},
  {v:'cases',t:'Select an overdue complaint',x:'CASE-2026-0142 (scholarship disbursement) is filtered in the register. Its SLA deadline has passed — open it to see the full detail panel.',hl:'[data-hl="row-CASE-2026-0142"]',pre:()=>{ui.f.cases={q:'CASE-2026-0142',status:'',inst:'',dept:'',prio:''};ui.tbl.cases=null;}},
  {v:'gaps',t:'Identify its action gap',x:'The detector calculates gaps from dates and history: 12 days without action, a missed next-action date and an overdue departmental response.',hl:'[data-hl="gap-CASE-2026-0142"]',pre:()=>{ui.f.gap.type='';ui.tbl.gaps=null;}},
  {v:'overlap',t:'Inspect a potential overlapping complaint',x:'CASE-2026-0142 is flagged against CASE-2026-0138. Use “Review both” to record an outcome — cases are never merged automatically.',hl:'[data-hl="ov-OV-01"]',pre:()=>{ui.f.overlap.status='';ui.tbl.ovl=null;}},
@@ -1001,7 +1260,11 @@ function demoHighlight(){
    9. ROUTER, RENDER, EVENT HANDLERS
    ===================================================================== */
 function render(){
- destroyCharts();ui.post=[];
+ destroyCharts();ui.post=[];buildIndexes();
+ if(!ui.role){renderLanding();return;}
+ document.body.classList.remove('no-role');
+ if(ui.role==='user'&&ui.view!=='udash'&&ui.view!=='submit')ui.view='udash';
+ if(ui.role==='admin'&&(ui.view==='udash'||ui.view==='submit'))ui.view='dash';
  const a=document.activeElement;let fid=null,sel=null;
  if(a&&a.id&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!a.closest('#drawer')&&!a.closest('#modal')){fid=a.id;try{sel=[a.selectionStart,a.selectionEnd];}catch(e){}}
  const scr=window.scrollY;
@@ -1010,23 +1273,40 @@ function render(){
  document.querySelectorAll('.nit').forEach(b=>b.classList.toggle('on',b.dataset.v===ui.view));
  document.body.classList.toggle('compact',!!S.settings.compact);
  const un=allAlerts().filter(x=>!S.read[x.id]).length;$('#bellCnt').textContent=un>99?'99+':un;$('#bellCnt').style.display=un?'':'none';
- document.title=NAV.reduce((t,g)=>t||(g[1].find(i=>i[0]===ui.view)||[])[1],'')+' — Governance & Complaint Monitoring (Demo)';
+ document.title=navList().reduce((t,g)=>t||(g[1].find(i=>i[0]===ui.view)||[])[1],'')+' — Governance & Complaint Monitoring (Demo)';
  if(fid){const el=document.getElementById(fid);if(el){el.focus();try{if(sel&&sel[0]!=null)el.setSelectionRange(sel[0],sel[1]);}catch(e){}}}
  window.scrollTo(0,scr);
  demoPanel();demoHighlight();
 }
-function go(v){closeAll();ui.view=v;document.body.classList.remove('nav-open');render();window.scrollTo(0,0);}
-function resetData(silent){try{localStorage.removeItem(KEY);}catch(e){}S=seed();ui.live.feed=null;ui.live.newCount=0;ui.tbl={};ui.applied.search={};ui.f.search={q:'',inst:'',state:'',dept:'',status:'',prio:'',sla:'',from:'',to:'',cat:''};ui.f.cases={q:'',status:'',inst:'',dept:'',prio:''};save();closeAll();if(!silent){render();toast('Demonstration data reset to the original records.');}}
+function go(v){
+ if(ui.role==='user'&&v!=='udash'&&v!=='submit')v='udash';
+ if(ui.role==='admin'&&(v==='udash'||v==='submit'))v='dash';
+ closeAll();ui.view=v;document.body.classList.remove('nav-open');render();window.scrollTo(0,0);}
+function resetData(silent){try{localStorage.removeItem(KEY);}catch(e){}S=ensureMine(seed());ui.live.feed=null;ui.live.newCount=0;ui.tbl={};ui.applied.search={};ui.f.search={q:'',inst:'',state:'',dept:'',status:'',prio:'',sla:'',from:'',to:'',cat:''};ui.f.cases={q:'',status:'',inst:'',dept:'',prio:''};save();closeAll();if(!silent){render();toast('Demonstration data reset to the original records.');}}
 const App={
- closeAll:closeAll,openCase:openCase,saveAction:saveAction,reviewOv:reviewOv,evUpdate:evUpdate,evNew:evNew,depUpdate:depUpdate,
+ closeAll:closeAll,openCase:openCase,saveAction:saveAction,
+ openMy:openMy,advance:advance,saveAdv:saveAdv,setRole:setRole,sbRegister:registerComplaint,
+ newComplaint(){ui.sub=null;go('submit');},
+ sb(k,v){ui.sub.d[k]=v;},
+ sbCat(v){const d=ui.sub.d;d.cat=v;d.dept=CD[v][0];render();},
+ sbNext(){const s=ui.sub,d=s.d;
+  if(d.title.trim().length<8){s.err='Enter a complaint title of at least 8 characters.';render();return;}
+  if(d.desc.trim().length<15){s.err='Describe the issue in at least a sentence (15+ characters).';render();return;}
+  s.err='';s.step=2;render();window.scrollTo(0,0);},
+ sbBack(){const s=ui.sub;s.step=s.step===3?2:1;s.err='';render();window.scrollTo(0,0);},
+ sbAddEv(){const ds=$('#sb-edesc').value.trim();if(!ds){toast('Describe the evidence reference first.','warn');return;}const f=$('#sb-efile').files[0];ui.sub.ev.push({type:$('#sb-etype').value,desc:ds,file:f?f.name:''});render();},
+ sbDelEv(i){ui.sub.ev.splice(i,1);render();},
+ sbCheck(){const s=ui.sub;s.chk=overlapCheck(s.d);s.step=3;render();window.scrollTo(0,0);},reviewOv:reviewOv,evUpdate:evUpdate,evNew:evNew,depUpdate:depUpdate,
  demoGo:demoGo,demoExit:demoExit,demoReset:demoReset,
  srt(id,i){const t=ui.tbl[id];if(t.sort===i)t.dir*=-1;else{t.sort=i;t.dir=1;}render();},
  pg(id,p){ui.tbl[id].page=p;render();},
  setF(sc,k,v){ui.f[sc][k]=v;if(k==='inst'&&(sc==='dash'||sc==='risk'))syncInst(v);Object.keys(ui.tbl).forEach(t=>{if(ui.tbl[t])ui.tbl[t].page=1;});render();},
+ setFD:debounce(function(sc,k,v){App.setF(sc,k,v);},220),
  clearF(sc){const o=ui.f[sc];Object.keys(o).forEach(k=>o[k]='');render();},
  setInst(v){syncInst(v);render();},goRisk(i){syncInst(i);go('risk');},go:go,toggleTheme(){applyTheme(ui.theme==='dark'?'light':'dark');render();},
  pickInst(i){syncInst(ui.f.dash.inst===String(i)?'':i);render();},
  setMap(k,v){if(k==='inst')syncInst(v);else ui.f.map[k]=v;render();},mapPick(k){ui.mapSel=(k&&ui.mapSel!==k)?k:null;render();},
+ setMapD:debounce(function(k,v){App.setMap(k,v);},220),
  setTwin(v){ui.twin=v;render();},twinTab(t){ui.twinTab=t;render();},goTwin(id){ui.twin=id;ui.twinTab='summary';go('twin');},
  stage(k,v){ui.f.search[k]=v;},applySearch(){ui.applied.search=Object.assign({},ui.f.search);ui.tbl.search=null;render();},
  clearSearch(){Object.keys(ui.f.search).forEach(k=>ui.f.search[k]='');ui.applied.search={};ui.tbl.search=null;render();},
@@ -1047,7 +1327,8 @@ const App={
 window.App=App;
 function updateClock(){const d=new Date();$('#clk').textContent=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
 function init(){
- buildNav();updateClock();setInterval(updateClock,20000);
+ try{const r=sessionStorage.getItem('igcms_role');if(r==='user'||r==='admin'){ui.role=r;ui.view=r==='user'?'udash':'dash';}}catch(e){}
+ buildNav();applyRoleChrome();updateClock();setInterval(updateClock,20000);
  if(window.innerWidth<1100&&window.innerWidth>=760)document.body.classList.add('nav-collapsed');
  $('#burger').onclick=()=>{if(window.innerWidth<760)document.body.classList.toggle('nav-open');else document.body.classList.toggle('nav-collapsed');};
  $('#ov').onclick=closeAll;
@@ -1061,7 +1342,7 @@ function init(){
  $('#demoBtn').onclick=()=>{ui.demo.on?demoExit():demoGo(0);};
  $('#profBtn').onclick=e=>{e.stopPropagation();$('#profMenu').classList.toggle('on');};
  document.addEventListener('click',e=>{if(!e.target.closest('#profMenu'))$('#profMenu').classList.remove('on');});
- $('#profMenu').onclick=e=>{const m=e.target.dataset.m;$('#profMenu').classList.remove('on');if(m==='csv')App.exportAll();};
+ $('#profMenu').onclick=e=>{const m=e.target.dataset.m;$('#profMenu').classList.remove('on');if(m==='csv')App.exportAll();if(m==='role')setRole(null);};
  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
  setInterval(()=>{if(ui.view==='live'&&!ui.live.paused&&!$('#modal').classList.contains('on')&&!$('#drawer').classList.contains('on')){simEvent();render();}},5000);
  render();
